@@ -5,8 +5,12 @@ import BottomNavigation from "./BottomNavigation";
 const Stack = createDrawerNavigator();
 const DrawerNavigation = () => {
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="home" component={BottomNavigation} />
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Stack.Screen name="Home" component={BottomNavigation} />
     </Stack.Navigator>
   );
 };
