@@ -12,7 +12,11 @@ const BottomNavigation = () => {
         headerShown: false,
       }}
     >
-      <Tab.Screen name="Diary" component={DiaryStack} />
+      <Tab.Screen
+        options={{ headerShown: true }}
+        name="Diary"
+        component={DiaryStack}
+      />
       <Tab.Screen name="Recipes" component={RecipieStack} />
       <Tab.Screen name="Weakly Plans" component={WeaklyPlansStack} />
     </Tab.Navigator>

@@ -1,14 +1,12 @@
-class Diary {
+class Meal {
   id: string;
-  food: string;
-  description: string;
-  calories: string;
+  foods: [];
+  calories: number;
 
-  constructor(id: string, food: string, description: string, calories: string) {
+  constructor(id: string, foods: [], calories: number) {
     this.id = id;
-    this.food = food;
-    this.description = description;
+    this.foods = foods;
     this.calories = calories;
   }
 }
-export default Diary;
+export default Meal;

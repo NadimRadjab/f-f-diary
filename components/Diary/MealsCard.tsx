@@ -3,17 +3,24 @@ import React from "react";
 import { TouchableOpacity, StyleSheet, Platform, Button } from "react-native";
 import FoodList from "./FoodList";
 
-const MealsCard = ({ handleLocation }: { handleLocation: () => void }) => {
+const MealsCard = ({
+  handleLocation,
+  meal,
+}: {
+  handleLocation: () => void;
+  meal: { id: string };
+}) => {
   return (
     <VStack
       borderRadius="2xl"
       w="90%"
+      marginBottom="5"
       bg="white"
       space={4}
       alignItems="center"
       padding="2"
     >
-      <Heading color="muted.600">Meal 1</Heading>
+      <Heading color="muted.600">{meal.id}</Heading>
       <Divider my="1" />
 
       <FoodList />
