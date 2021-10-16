@@ -1,11 +1,12 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { ScrollView, Text } from "native-base";
+import { Heading, ScrollView, Text, View } from "native-base";
 import React, { useEffect, useState } from "react";
 import { TouchableOpacity } from "react-native";
 import MealsCard from "../../components/Diary/MealsCard";
 import {
   addList,
   getPageCalories,
+  getMealCalories,
 } from "../../redux/features/Diary/diarySlice";
 import { useAppDipsatch, useAppSelector } from "../../redux/hooks";
 import { DiaryParamList } from "../../routs/DiaryStacks/DiaryParamList";
@@ -60,20 +61,32 @@ const HomeScreen = ({
     });
   }, [prevPage, pages]);
   useEffect(() => {
+    dispatch(getMealCalories());
     dispatch(getPageCalories());
-  }, [dispatch]);
+  }, [dispatch, prevPage]);
   return (
-    <ScrollView contentContainerStyle={{ alignItems: "center" }} marginTop="20">
-      {!pages.length
-        ? null
-        : lastPage?.meals.map(
-            (meal: { id: string; foods: {}[]; calories: number }, i) => (
-              <MealsCard meal={meal} key={i} handleLocation={handleLocation} />
-            )
-          )}
-
-      {/* <MealsCard handleLocation={handleLocation} /> */}
-    </ScrollView>
+    <View alignItems="center">
+      <Heading color="warmGray.700" p="7">
+        Daily Calories: {pages[pageNumber].totalcal}
+      </Heading>
+      <ScrollView
+        contentContainerStyle={{ alignItems: "center" }}
+        marginTop="15"
+        w="100%"
+      >
+        {!pages.length
+          ? null
+          : lastPage?.meals.map(
+              (meal: { id: string; foods: {}[]; calories: number }, i) => (
+                <MealsCard
+                  meal={meal}
+                  key={i}
+                  handleLocation={handleLocation}
+                />
+              )
+            )}
+      </ScrollView>
+    </View>
   );
 };
 

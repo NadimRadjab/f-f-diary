@@ -30,17 +30,56 @@ const initialState: State = {
       meals: [
         {
           calories: 0,
-          foods: [],
+          foods: [
+            {
+              title: "Pizza Buddy: Frozen Pizza Dough, 16 Oz",
+              servingsSize: 50,
+              servingsNumber: 8,
+              calories: 113,
+            },
+            {
+              title: "Pizza Buddy: Frozen Pizza Dough, 16 Oz",
+              servingsSize: 50,
+              servingsNumber: 8,
+              calories: 53,
+            },
+            {
+              title: "Pizza Buddy: Frozen Pizza Dough, 16 Oz",
+              servingsSize: 50,
+              servingsNumber: 8,
+              calories: 23,
+            },
+          ],
           id: "1",
         },
         {
           calories: 0,
-          foods: [],
+          foods: [
+            {
+              title: "Pizza Buddy: Frozen Pizza Dough, 16 Oz",
+              servingsSize: 20,
+              servingsNumber: 8,
+              calories: 23,
+            },
+          ],
           id: "2",
         },
         {
           calories: 0,
-          foods: [],
+          foods: [
+            {
+              title: "Pizza Buddy: Frozen Pizza Dough, 16 Oz",
+              servingsSize: 80,
+              servingsNumber: 8,
+              calories: 23,
+            },
+            {
+              title: "Pizza Buddy: Frozen Pizza Dough, 16 Oz",
+              servingsSize: 80,
+              servingsNumber: 8,
+              calories: 883,
+            },
+          ],
           id: "3",
         },
         {
@@ -111,12 +150,12 @@ export const diarySlice = createSlice({
 
       state.pages.push({ ...newPage });
     },
-    addFood: (state: State) => {
-      const newFood = new Food("1", "Eggs", "White Egss", 432);
+    addFood: (state: State, action) => {
+      // const newFood = new Food("1", "Eggs", "White Egss", 432);
       state.pages.map((page: { id: string; meals: { foods: {}[] }[] }) => {
         if (page.id === "1") {
           const meals = page?.meals.find((meal: any) => meal.id === "1");
-          return meals?.foods.push({ ...newFood });
+          return meals?.foods.push(action.payload);
         }
         return page;
       });
@@ -128,7 +167,7 @@ export const diarySlice = createSlice({
           totalcal: number;
           meals: { calories: number; foods: {}[] }[];
         }) => {
-          if (page.id === "2") {
+          if (page.id === "1") {
             page.totalcal = page.meals?.reduce((prev: any, cur) => {
               return prev + cur.calories;
             }, 0);
@@ -137,7 +176,31 @@ export const diarySlice = createSlice({
         }
       );
     },
+    getMealCalories: (state: State) => {
+      state.pages.map(
+        (page: {
+          id: string;
+          totalcal: number;
+          meals: { calories: number; foods: {}[] }[];
+        }) => {
+          if (page.id === "1") {
+            const foodArr = page.meals.map((meal: any) => {
+              return meal.foods.reduce((prev: any, cur: any) => {
+                return prev + cur.calories;
+              }, 0);
+            });
+
+            for (let i = 0; i < foodArr.length; i++) {
+              page.meals[i].calories = foodArr[i];
+            }
+          }
+
+          return page;
+        }
+      );
+    },
   },
 });
-export const { addList, addFood, getPageCalories } = diarySlice.actions;
+export const { addList, addFood, getPageCalories, getMealCalories } =
+  diarySlice.actions;
 export default diarySlice.reducer;

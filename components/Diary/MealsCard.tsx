@@ -9,7 +9,7 @@ const MealsCard = ({
   meal,
 }: {
   handleLocation: () => void;
-  meal: { id: string; foods: {}[]; totalcal: number };
+  meal: { id: string; foods: {}[]; calories: number };
 }) => {
   return (
     <VStack
@@ -17,15 +17,16 @@ const MealsCard = ({
       w="90%"
       marginBottom="5"
       bg="white"
-      space={4}
+      space={3}
       alignItems="center"
       padding="2"
     >
-      <Heading color="muted.600">{meal.id}</Heading>
+      <Heading color="muted.600">Meal {meal.id}</Heading>
+      <Text color="warmGray.500">Total Calories: {meal.calories}</Text>
       <Divider my="1" />
 
-      {meal.foods.map((food, i) => (
-        <FoodList key={i} />
+      {meal.foods?.map((food, i) => (
+        <FoodList key={i} food={food} />
       ))}
 
       {Platform.OS === "android" ? (
