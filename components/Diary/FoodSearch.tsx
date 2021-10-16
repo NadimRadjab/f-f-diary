@@ -1,9 +1,20 @@
 import { Icon, IconButton, Input, View } from "native-base";
 import { Ionicons } from "@expo/vector-icons";
-
-import React from "react";
+import React, { useState } from "react";
+import { useAppDipsatch } from "../../redux/hooks";
+import { getFoods } from "../../redux/features/Diary/foodSlice";
+import { useDispatch } from "react-redux";
 
 const FoodSearch = () => {
+  const [product, setProduct] = useState<string>("");
+  const handleProduct = (value: string) => {
+    setProduct(value);
+  };
+  const dispatch = useAppDipsatch();
+  const handleSubmit = () => {
+    dispatch(getFoods(product));
+    setProduct("");
+  };
   return (
     <View>
       <View
@@ -14,6 +25,9 @@ const FoodSearch = () => {
         w="100%"
       >
         <Input
+          onSubmitEditing={handleSubmit}
+          value={product}
+          onChangeText={handleProduct}
           w="80%"
           InputLeftElement={
             <Icon

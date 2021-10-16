@@ -10,12 +10,7 @@ const DiaryStack = () => {
     <Stack.Navigator>
       <Stack.Screen
         options={({ route }) => ({
-          title: "Diary",
-          headerRight: () => (
-            <TouchableOpacity>
-              <Text>New Page</Text>
-            </TouchableOpacity>
-          ),
+          headerTitleAlign: "center",
         })}
         name="DiaryStack"
         component={Diary}
@@ -24,6 +19,7 @@ const DiaryStack = () => {
       <Stack.Screen
         options={({ route }) => ({
           title: route.params.title,
+          headerShown: false,
         })}
         name="FoodSearch"
         component={DiaryTopNavigator}

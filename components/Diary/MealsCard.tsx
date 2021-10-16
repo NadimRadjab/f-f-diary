@@ -1,6 +1,7 @@
 import { VStack, Heading, Divider, Text } from "native-base";
 import React from "react";
 import { TouchableOpacity, StyleSheet, Platform, Button } from "react-native";
+import { useAppSelector } from "../../redux/hooks";
 import FoodList from "./FoodList";
 
 const MealsCard = ({
@@ -8,7 +9,7 @@ const MealsCard = ({
   meal,
 }: {
   handleLocation: () => void;
-  meal: { id: string };
+  meal: { id: string; foods: {}[]; totalcal: number };
 }) => {
   return (
     <VStack
@@ -23,7 +24,9 @@ const MealsCard = ({
       <Heading color="muted.600">{meal.id}</Heading>
       <Divider my="1" />
 
-      <FoodList />
+      {meal.foods.map((food, i) => (
+        <FoodList key={i} />
+      ))}
 
       {Platform.OS === "android" ? (
         <TouchableOpacity onPress={handleLocation} style={styles.btnContainer}>

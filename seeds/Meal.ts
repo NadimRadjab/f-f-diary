@@ -1,6 +1,6 @@
 class Meal {
   id: string;
-  foods: [];
+  foods: {}[];
   calories: number;
 
   constructor(id: string, foods: [], calories: number) {

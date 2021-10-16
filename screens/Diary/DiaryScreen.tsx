@@ -1,11 +1,12 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { Button, ScrollView, Text } from "native-base";
+import { ScrollView, Text } from "native-base";
 import React, { useEffect, useState } from "react";
 import { TouchableOpacity } from "react-native";
-import { useSelector } from "react-redux";
-
 import MealsCard from "../../components/Diary/MealsCard";
-import { addList } from "../../redux/features/Diary/diarySlice";
+import {
+  addList,
+  getPageCalories,
+} from "../../redux/features/Diary/diarySlice";
 import { useAppDipsatch, useAppSelector } from "../../redux/hooks";
 import { DiaryParamList } from "../../routs/DiaryStacks/DiaryParamList";
 
@@ -14,25 +15,25 @@ const HomeScreen = ({
 }: {
   navigation: NativeStackNavigationProp<DiaryParamList, "DiaryStack">;
 }) => {
-  const diary = useAppSelector((state) => state.diary.diary);
+  const pages = useAppSelector((state) => state.diary.pages);
   const dispatch = useAppDipsatch();
-  const [prevPage, setPrevPage] = useState<number>(diary.length - 1);
+  const [prevPage, setPrevPage] = useState<number>(pages.length - 1);
 
-  const lastPage = diary[prevPage];
+  const lastPage = pages[prevPage];
 
   const handleLocation = () => {
     navigation.navigate("FoodSearch", { title: "Meal 1" });
   };
 
   const handleNewPage = () => {
-    if (prevPage === diary.length - 1) dispatch(addList());
+    if (prevPage === pages.length - 1) dispatch(addList());
 
     setPrevPage(prevPage + 1);
   };
 
   let pageNumber: number;
-  if (prevPage === diary.length - 1) {
-    pageNumber = diary.length - 1;
+  if (prevPage === pages.length - 1) {
+    pageNumber = pages.length - 1;
   } else {
     pageNumber = prevPage;
   }
@@ -41,7 +42,9 @@ const HomeScreen = ({
       title: `Page ${pageNumber.toString()}`,
       headerRight: () => (
         <TouchableOpacity onPress={handleNewPage}>
-          <Text>New Page</Text>
+          <Text>
+            {pageNumber === pages.length - 1 ? "New Page" : "Next Page"}
+          </Text>
         </TouchableOpacity>
       ),
       headerLeft: () =>
@@ -55,14 +58,19 @@ const HomeScreen = ({
           </TouchableOpacity>
         ),
     });
-  }, [prevPage, diary]);
+  }, [prevPage, pages]);
+  useEffect(() => {
+    dispatch(getPageCalories());
+  }, [dispatch]);
   return (
     <ScrollView contentContainerStyle={{ alignItems: "center" }} marginTop="20">
-      {!diary.length
+      {!pages.length
         ? null
-        : lastPage?.meals.map((meal: {}, i) => (
-            <MealsCard meal={meal} key={i} handleLocation={handleLocation} />
-          ))}
+        : lastPage?.meals.map(
+            (meal: { id: string; foods: {}[]; calories: number }, i) => (
+              <MealsCard meal={meal} key={i} handleLocation={handleLocation} />
+            )
+          )}
 
       {/* <MealsCard handleLocation={handleLocation} /> */}
     </ScrollView>

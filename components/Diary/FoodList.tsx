@@ -7,7 +7,7 @@ import { useAppDipsatch } from "../../redux/hooks";
 const FoodList = () => {
   const dispatch = useAppDipsatch();
   const handleMeal = () => {
-    dispatch(addList());
+    dispatch(addFood());
   };
   return (
     <TouchableOpacity onPress={handleMeal} style={styles.screen}>

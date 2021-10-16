@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import diarySlice from "./features/Diary/diarySlice";
+import foodSlice from "./features/Diary/foodSlice";
 
 export const store = configureStore({
   reducer: {
     diary: diarySlice,
+    foods: foodSlice,
   },
 });
 
