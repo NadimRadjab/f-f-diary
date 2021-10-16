@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import Food from "../../../seeds/Food";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { firestore } from "../../../firebase";
 import Meal from "../../../seeds/Meal";
 import Page from "../../../seeds/Page";
 
@@ -9,7 +9,56 @@ const mealCreator = (arr: {}[]) => {
   }
 };
 
+export const getOwnerDiary = createAsyncThunk(
+  "diary/getOwnerDiary",
+  async (ownerId: string) => {
+    let ownersIds = [] as any;
+    let ownerDiary = {
+      id: "",
+      ownerId: "",
+      pages: [],
+    };
+    const diary = await firestore.collection("diaries").get();
+
+    const data = diary.docs.forEach((doc) =>
+      ownersIds.push(doc.data().ownerId)
+    );
+
+    if (ownersIds.includes(ownerId)) {
+      diary.docs.forEach((doc) => {
+        if (doc.data().ownerId === ownerId) {
+          ownerDiary.id = doc.id;
+          (ownerDiary.ownerId = doc.data()?.ownerId),
+            (ownerDiary.pages = doc.data()?.pages);
+        }
+      });
+    } else {
+      let arr = [] as any;
+      mealCreator(arr);
+      const res = await firestore.collection("diaries").add({
+        ownerId: "u1",
+        pages: [
+          {
+            date: new Date().toISOString(),
+            id: "1",
+            meals: arr,
+          },
+        ],
+      });
+
+      const data = res.get().then((doc) => {
+        ownerDiary.id = doc.id;
+        (ownerDiary.ownerId = doc.data()?.ownerId),
+          (ownerDiary.pages = doc.data()?.pages);
+      });
+    }
+
+    return ownerDiary;
+  }
+);
+
 interface State {
+  ownerId: string;
   pages: {
     id: string;
     date: string;
@@ -23,6 +72,7 @@ interface State {
   isLoading: boolean;
 }
 const initialState: State = {
+  ownerId: "u1",
   pages: [
     {
       date: "2021-10-14T09:33:15.577Z",
@@ -35,33 +85,14 @@ const initialState: State = {
               title: "Pizza Buddy: Frozen Pizza Dough, 16 Oz",
               servingsSize: 50,
               servingsNumber: 8,
-              calories: 113,
-            },
-            {
-              title: "Pizza Buddy: Frozen Pizza Dough, 16 Oz",
-              servingsSize: 50,
-              servingsNumber: 8,
               calories: 53,
             },
-            {
-              title: "Pizza Buddy: Frozen Pizza Dough, 16 Oz",
-              servingsSize: 50,
-              servingsNumber: 8,
-              calories: 23,
-            },
           ],
           id: "1",
         },
         {
           calories: 0,
-          foods: [
-            {
-              title: "Pizza Buddy: Frozen Pizza Dough, 16 Oz",
-              servingsSize: 20,
-              servingsNumber: 8,
-              calories: 23,
-            },
-          ],
+          foods: [],
           id: "2",
         },
         {
@@ -73,12 +104,6 @@ const initialState: State = {
               servingsNumber: 8,
               calories: 23,
             },
-            {
-              title: "Pizza Buddy: Frozen Pizza Dough, 16 Oz",
-              servingsSize: 80,
-              servingsNumber: 8,
-              calories: 883,
-            },
           ],
           id: "3",
         },
@@ -89,43 +114,6 @@ const initialState: State = {
         },
         {
           calories: 0,
-          foods: [],
-          id: "5",
-        },
-        {
-          calories: 0,
-          foods: [],
-          id: "6",
-        },
-      ],
-      totalcal: 0,
-    },
-    {
-      date: "2021-10-14T09:33:15.577Z",
-      id: "2",
-      meals: [
-        {
-          calories: 0,
-          foods: [],
-          id: "1",
-        },
-        {
-          calories: 400,
-          foods: [],
-          id: "2",
-        },
-        {
-          calories: 79,
-          foods: [],
-          id: "3",
-        },
-        {
-          calories: 34,
-          foods: [],
-          id: "4",
-        },
-        {
-          calories: 250,
           foods: [],
           id: "5",
         },
@@ -199,6 +187,16 @@ export const diarySlice = createSlice({
         }
       );
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(getOwnerDiary.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(getOwnerDiary.fulfilled, (state, action) => {
+        console.log(action.payload);
+        state.pages = action.payload.pages;
+      });
   },
 });
 export const { addList, addFood, getPageCalories, getMealCalories } =

@@ -67,7 +67,7 @@ const HomeScreen = ({
   return (
     <ScrollView contentContainerStyle={{ alignItems: "center" }}>
       <Heading color="warmGray.700" p="7">
-        Daily Calories: {pages[pageNumber].totalcal}
+        Daily Calories: {pages[pageNumber]?.totalcal}
       </Heading>
       <View style={{ alignItems: "center" }} marginTop="15" w="100%">
         {!pages.length

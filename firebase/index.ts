@@ -1,5 +1,5 @@
-import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import Firebase from "firebase";
+import "firebase/firestore";
 import {
   FIRE_BASE_API_KEY,
   FIRE_BASE_AUTH_DOMAIN,
@@ -17,5 +17,6 @@ const firebaseConfig = {
   messagingSenderId: FIRE_BASE_MESSAGING_SENDER_ID,
   appId: FIRE_BASE_APP_ID,
 };
-export const app = initializeApp(firebaseConfig);
-export const db = getFirestore();
+export const app = Firebase.initializeApp(firebaseConfig);
+export const db = app.database;
+export const firestore = Firebase.firestore();
