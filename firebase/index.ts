@@ -20,3 +20,4 @@ const firebaseConfig = {
 export const app = Firebase.initializeApp(firebaseConfig);
 export const db = app.database;
 export const firestore = Firebase.firestore();
+export const firestoreFunc = Firebase.firestore;

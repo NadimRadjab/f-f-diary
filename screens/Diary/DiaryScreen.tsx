@@ -4,9 +4,10 @@ import React, { useEffect, useState } from "react";
 import { TouchableOpacity } from "react-native";
 import MealsCard from "../../components/Diary/MealsCard";
 import {
-  addList,
+  mealCreator,
   getPageCalories,
   getMealCalories,
+  createNewPage,
 } from "../../redux/features/Diary/diarySlice";
 import { useAppDipsatch, useAppSelector } from "../../redux/hooks";
 import { DiaryParamList } from "../../routs/DiaryStacks/DiaryParamList";
@@ -17,6 +18,7 @@ const HomeScreen = ({
   navigation: NativeStackNavigationProp<DiaryParamList, "DiaryStack">;
 }) => {
   const pages = useAppSelector((state) => state.diary.pages);
+  const diaryId = useAppSelector((state) => state.diary.id);
   const dispatch = useAppDipsatch();
   const [prevPage, setPrevPage] = useState<number>(pages.length - 1);
 
@@ -27,7 +29,16 @@ const HomeScreen = ({
   };
 
   const handleNewPage = () => {
-    if (prevPage === pages.length - 1) dispatch(addList());
+    let newArr = [] as any;
+    mealCreator(newArr);
+    const newPage = {
+      id: pages.length.toString(),
+      date: new Date().toISOString(),
+      meals: newArr,
+      totalcal: 0,
+    };
+    if (prevPage === pages.length - 1)
+      dispatch(createNewPage({ diaryId, newPage }));
 
     setPrevPage(prevPage + 1);
   };
