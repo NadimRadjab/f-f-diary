@@ -4,8 +4,8 @@ import Meal from "../../../seeds/Meal";
 import Page from "../../../seeds/Page";
 
 const mealCreator = (arr: {}[]) => {
-  for (let i = 0; i < 6; i++) {
-    arr.push({ ...new Meal("1", [], 0) });
+  for (let i = 1; i < 6; i++) {
+    arr.push({ ...new Meal(i.toString(), [], 0) });
   }
 };
 
@@ -160,14 +160,14 @@ export const diarySlice = createSlice({
         return page;
       });
     },
-    getPageCalories: (state: State) => {
+    getPageCalories: (state: State, action) => {
       state.pages.map(
         (page: {
           id: string;
           totalcal: number;
           meals: { calories: number; foods: {}[] }[];
         }) => {
-          if (page.id === "1") {
+          if (page.id === action.payload) {
             page.totalcal = page.meals?.reduce((prev: any, cur) => {
               return prev + cur.calories;
             }, 0);

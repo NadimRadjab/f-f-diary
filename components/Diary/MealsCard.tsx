@@ -26,7 +26,7 @@ const MealsCard = ({
       <Divider my="1" />
 
       {meal.foods?.map((food, i) => (
-        <FoodList key={i} food={food} />
+        <FoodList isSearched={false} key={i} food={food} />
       ))}
 
       {Platform.OS === "android" ? (

@@ -1,10 +1,14 @@
-import { View, Text, Divider } from "native-base";
+import { View, Text } from "native-base";
 import React from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { addFood } from "../../redux/features/Diary/diarySlice";
 import { useAppDipsatch } from "../../redux/hooks";
 
-const FoodList = ({ food }) => {
+interface Props {
+  food: any;
+  isSearched: boolean;
+}
+const FoodList = ({ food, isSearched }: Props) => {
   const dispatch = useAppDipsatch();
   const handleMeal = () => {
     const newObject = {
@@ -15,7 +19,6 @@ const FoodList = ({ food }) => {
     };
     dispatch(addFood(newObject));
   };
-
   return (
     <TouchableOpacity onPress={handleMeal} style={styles.screen}>
       <View bg="#fffffc" style={styles.listContainer}>
@@ -29,12 +32,20 @@ const FoodList = ({ food }) => {
             justifyContent="space-between"
           >
             <View>
-              {/* <Text>Searvings Size: {food.servings.size}</Text>
-              
-              <Text>Searvings Number: {food.servings.number}</Text> */}
+              <Text>
+                Searvings Size:
+                {isSearched ? food.servings.size : food.servingsSize}
+              </Text>
+
+              <Text>
+                Searvings Number:
+                {isSearched ? food.servings.number : food.servingsNumber}
+              </Text>
             </View>
 
-            {/* <Text>kcal: {food.nutrition?.calories}</Text> */}
+            <Text>
+              kcal: {isSearched ? food.nutrition?.calories : food.calories}
+            </Text>
           </View>
         </View>
       </View>

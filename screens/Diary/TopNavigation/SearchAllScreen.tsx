@@ -8,7 +8,7 @@ const SearchAllScreen = () => {
   return (
     <ScrollView flex="1" mt="3">
       {foods?.map((food) => (
-        <FoodList key={food.id} food={food} />
+        <FoodList isSearched key={food.id} food={food} />
       ))}
     </ScrollView>
   );

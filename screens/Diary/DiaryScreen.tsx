@@ -62,18 +62,14 @@ const HomeScreen = ({
   }, [prevPage, pages]);
   useEffect(() => {
     dispatch(getMealCalories());
-    dispatch(getPageCalories());
+    dispatch(getPageCalories(pageNumber.toString()));
   }, [dispatch, prevPage]);
   return (
-    <View alignItems="center">
+    <ScrollView contentContainerStyle={{ alignItems: "center" }}>
       <Heading color="warmGray.700" p="7">
         Daily Calories: {pages[pageNumber].totalcal}
       </Heading>
-      <ScrollView
-        contentContainerStyle={{ alignItems: "center" }}
-        marginTop="15"
-        w="100%"
-      >
+      <View style={{ alignItems: "center" }} marginTop="15" w="100%">
         {!pages.length
           ? null
           : lastPage?.meals.map(
@@ -85,8 +81,8 @@ const HomeScreen = ({
                 />
               )
             )}
-      </ScrollView>
-    </View>
+      </View>
+    </ScrollView>
   );
 };
 
