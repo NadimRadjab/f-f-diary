@@ -1,36 +1,63 @@
-import { View, Text } from "native-base";
-import React from "react";
+import { View, Text, Button, Box, IconButton } from "native-base";
+import React, { ReactComponentElement } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
-import { addNewFood } from "../../redux/features/Diary/diarySlice";
+import { addNewFood, deleteFood } from "../../redux/features/Diary/diarySlice";
 import { useAppDipsatch, useAppSelector } from "../../redux/hooks";
+import { Ionicons } from "@expo/vector-icons";
+import { IViewProps } from "native-base/lib/typescript/components/basic/View/types";
 
 interface Props {
   food: any;
   mealId: string;
   isSearched: boolean;
+  pageId: string | null;
 }
-const FoodList = ({ mealId, food, isSearched }: Props) => {
+const FoodList = ({ pageId, mealId, food, isSearched }: Props) => {
   const diaryId = useAppSelector((state) => state.diary.id);
   const dispatch = useAppDipsatch();
   const handleMeal = () => {
-    const newObject = {
+    if (!isSearched) return;
+    let newFood = {
+      id: food.id,
       title: food.title,
       servingsSize: food.servings.size,
       servingsNumber: food.servings.number,
       calories: food.nutrition?.calories,
+      badges: food.badges,
+      description: food.description,
+      images: food.images,
+      nutrition: food.nutriotion,
     };
     const items = {
       mealId: mealId,
       food,
+      newFood,
       diaryId,
     };
+
     dispatch(addNewFood(items));
   };
+  let cView: any = TouchableOpacity;
+  if (!isSearched) {
+    cView = <View></View>;
+  }
   return (
     <TouchableOpacity onPress={handleMeal} style={styles.screen}>
+      <Box mb="5">
+        <IconButton
+          onPress={() =>
+            dispatch(deleteFood({ pageId, mealId, diaryId, foodId: food.id }))
+          }
+          size={30}
+          _icon={{ as: Ionicons, name: "close-outline" }}
+        />
+      </Box>
       <View bg="#fffffc" style={styles.listContainer}>
         <View p="3" style={styles.list}>
-          <Text>{food.title}</Text>
+          <View flexDirection="row" justifyContent="space-around">
+            <Text>{food.title}</Text>
+            {!isSearched && null}
+          </View>
 
           <View
             mt="3"

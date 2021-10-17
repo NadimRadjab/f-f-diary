@@ -1,14 +1,16 @@
-import { ScrollView } from "native-base";
+import { ScrollView, Text } from "native-base";
 import React from "react";
 import FoodList from "../../../components/Diary/FoodList";
 import { useAppSelector } from "../../../redux/hooks";
 
-const SearchAllScreen = ({ route }: any) => {
+const SearchAllScreen = ({ route, navigation }: any) => {
   const foods = useAppSelector((state) => state.foods.foods);
+
   return (
     <ScrollView flex="1" mt="3">
       {foods?.map((food) => (
         <FoodList
+          pageId={null}
           mealId={route.params.mealId}
           isSearched
           key={food.id}

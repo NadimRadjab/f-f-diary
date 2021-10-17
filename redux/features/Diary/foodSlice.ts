@@ -18,7 +18,7 @@ export const getFoods = createAsyncThunk(
   "food/getFoods",
   async (product: string) => {
     const response: ApiResponse<FoodsData> = await axios.get(
-      `https://api.spoonacular.com/food/products/search?query=${product}&number=2&addProductInformation=true&apiKey=${SPOO_API_KEY}`
+      `https://api.spoonacular.com/food/products/search?query=${product}&number=1&addProductInformation=true&apiKey=${SPOO_API_KEY}`
     );
     return response.data?.products;
   }

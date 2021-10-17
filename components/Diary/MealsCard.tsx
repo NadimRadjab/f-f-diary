@@ -11,7 +11,13 @@ const MealsCard = ({
   navigation,
 }: {
   navigation: NativeStackNavigationProp<DiaryParamList, "DiaryStack">;
-  meal: { id: string; foods: {}[]; calories: number; mealNumber: number };
+  meal: {
+    inPage: string;
+    id: string;
+    foods: {}[];
+    calories: number;
+    mealNumber: number;
+  };
 }) => {
   const handleLocation = () => {
     navigation.navigate("FoodSearch", { mealId: meal.id });
@@ -32,7 +38,13 @@ const MealsCard = ({
       <Divider my="1" />
 
       {meal.foods?.map((food, i) => (
-        <FoodList mealId={meal.id} isSearched={false} key={i} food={food} />
+        <FoodList
+          pageId={meal.inPage}
+          mealId={meal.id}
+          isSearched={false}
+          key={i}
+          food={food}
+        />
       ))}
 
       {Platform.OS === "android" ? (

@@ -2,17 +2,17 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { DiaryParamList } from "../../routs/DiaryStacks/DiaryParamList";
 import { Heading, ScrollView, Text, View } from "native-base";
 import React, { useEffect, useState } from "react";
-import { TouchableOpacity } from "react-native";
+import { Platform, TouchableOpacity } from "react-native";
 import MealsCard from "../../components/Diary/MealsCard";
-import { v4 as uuidv4 } from "uuid";
 import {
-  mealCreator,
   getPageCalories,
   getMealCalories,
   createNewPage,
   getOwnerDiary,
 } from "../../redux/features/Diary/diarySlice";
 import { useAppDipsatch, useAppSelector } from "../../redux/hooks";
+import { mealCreator } from "../../helpers/helpers";
+import Loading from "../../components/Utils/Loading";
 
 const HomeScreen = ({
   navigation,
@@ -21,8 +21,11 @@ const HomeScreen = ({
 }) => {
   const pages = useAppSelector((state) => state.diary.pages);
   const diaryId = useAppSelector((state) => state.diary.id);
+  const isLoading = useAppSelector((state) => state.diary.isLoading);
   const dispatch = useAppDipsatch();
-  const [prevPage, setPrevPage] = useState<number>(pages.length - 1);
+  const [prevPage, setPrevPage] = useState<number>(
+    pages.length ? pages.length - 1 : 0
+  );
 
   const lastPage = pages[prevPage];
 
@@ -48,9 +51,24 @@ const HomeScreen = ({
   } else {
     pageNumber = prevPage;
   }
+
   useEffect(() => {
     navigation.setOptions({
-      title: `Page ${pageNumber.toString()}`,
+      headerTitle: () =>
+        isLoading ? (
+          <Text>
+            <Loading />
+          </Text>
+        ) : Platform.OS === "ios" ? (
+          <Text p="2" fontSize="xl">
+            Page: {pageNumber.toString()}
+          </Text>
+        ) : (
+          <Text p="3" fontSize="xl">
+            Page: {pageNumber.toString()}
+          </Text>
+        ),
+
       headerRight: () => (
         <TouchableOpacity onPress={handleNewPage}>
           <Text>
@@ -74,10 +92,13 @@ const HomeScreen = ({
     dispatch(getMealCalories());
     dispatch(getPageCalories(pageNumber.toString()));
   }, [dispatch, prevPage]);
-
   useEffect(() => {
     dispatch(getOwnerDiary("u1"));
   }, [dispatch]);
+  useEffect(() => {
+    setPrevPage(pages.length - 1);
+  }, [pages]);
+  if (isLoading) return <Loading />;
   return (
     <ScrollView contentContainerStyle={{ alignItems: "center" }}>
       <Heading color="warmGray.700" p="7">
@@ -89,6 +110,7 @@ const HomeScreen = ({
           : lastPage?.meals.map(
               (
                 meal: {
+                  inPage: string;
                   id: string;
                   foods: {}[];
                   calories: number;

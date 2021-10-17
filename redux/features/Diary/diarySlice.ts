@@ -1,13 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { firestore, firestoreFunc } from "../../../firebase";
-import Meal from "../../../seeds/Meal";
-import { v4 as uuid4 } from "uuid";
-
-export const mealCreator = (arr: {}[], pageNumber: string) => {
-  for (let i = 1; i < 6; i++) {
-    arr.push({ ...new Meal(uuid4(), pageNumber, i, [], 0) });
-  }
-};
+import { mealCreator } from "../../../helpers/helpers";
+import { Meal, DiaryState, Food, Page } from "./types";
 
 export const getOwnerDiary = createAsyncThunk(
   "diary/getOwnerDiary",
@@ -53,7 +47,7 @@ export const getOwnerDiary = createAsyncThunk(
         meals: arr,
       });
 
-      res.get().then((doc) => {
+      await res.get().then((doc) => {
         ownerDiary.id = doc.id;
         ownerDiary.date = doc.data()?.data;
         ownerDiary.ownerId = doc.data()?.ownerId;
@@ -67,18 +61,11 @@ export const getOwnerDiary = createAsyncThunk(
           page.meals.push(meal);
         }
       }
-      // page.meals = ownerDiary.meals.map((meal: { inPage: string }) => {
-      //   if (meal.inPage === page.id) {
-      //     console.log(meal);
-      //     page.meals.push({ ...meal });
-      //     return page;
-      //   }
-      // });
     });
-
     return ownerDiary;
   }
 );
+//Make a new Page
 export const createNewPage = createAsyncThunk(
   "page/createNewPage",
   async (items: {
@@ -102,13 +89,29 @@ export const createNewPage = createAsyncThunk(
     return items.newPage;
   }
 );
+
+//Add a new Food.
 export const addNewFood = createAsyncThunk(
   "food/addNewFood",
-  async (items: { diaryId: string; mealId: string; food: {} }) => {
+  async (items: {
+    diaryId: string;
+    mealId: string;
+    newFood: {
+      id: string;
+      title: string;
+      badges: [];
+      servingsSize: number;
+      servingsNumber: number;
+      description: string;
+      images: [];
+      calories: number;
+    };
+    food: any;
+  }) => {
     let newArr = [] as any;
     const data = await firestore.collection("diaries").get();
     data.forEach((doc) => {
-      newArr = doc.data().meals.map((meal: Meals) => {
+      newArr = doc.data().meals.map((meal: Meal) => {
         if (meal.id === items.mealId) {
           meal.foods.push(items.food);
           return meal;
@@ -120,27 +123,55 @@ export const addNewFood = createAsyncThunk(
       .collection("diaries")
       .doc(items.diaryId)
       .update({ meals: newArr });
+
+    return {
+      mealId: items.mealId,
+      id: items.newFood.id,
+      title: items.newFood.title,
+      servingsSize: items.newFood.servingsSize,
+      servingsNumber: items.newFood.servingsNumber,
+      calories: items.newFood.calories,
+    };
   }
 );
 
-interface Meals {
-  id: string;
-  mealNumber: number;
-  foods: {}[];
-  calories: number;
-}
-interface State {
-  ownerId: string;
-  id: string;
-  pages: {
-    id: string;
-    date: string;
-    meals: Meals[];
-    totalcal: number;
-  }[];
-  isLoading: boolean;
-}
-const initialState: State = {
+//Remove Food
+export const deleteFood = createAsyncThunk(
+  "food/deleteFood",
+  async (items: {
+    pageId: string | null;
+    diaryId: string;
+    mealId: string;
+    foodId: string;
+  }) => {
+    let newArr = [] as any;
+    const data = await firestore.collection("diaries").get();
+    data.forEach((doc) => {
+      newArr = doc.data().meals.map((meal: Meal) => {
+        if (meal.id === items.mealId) {
+          meal.foods = meal.foods.filter(
+            (food: any) => food.id !== items.foodId
+          );
+          return meal;
+        }
+        return meal;
+      });
+    });
+
+    await firestore
+      .collection("diaries")
+      .doc(items.diaryId)
+      .update({ meals: newArr });
+
+    return {
+      mealId: items.mealId,
+      pageId: items.pageId,
+      foodId: items.foodId,
+    };
+  }
+);
+
+const initialState: DiaryState = {
   ownerId: "u1",
   id: "",
   pages: [],
@@ -150,23 +181,7 @@ export const diarySlice = createSlice({
   name: "diary",
   initialState,
   reducers: {
-    // addList: (state: State) => {
-    //   const newPage = new Page("1", new Date().toISOString(), [], 0);
-    //   mealCreator(newPage.meals);
-
-    //   state.pages.push({ ...newPage });
-    // },
-    // addFood: (state: State, action) => {
-    //   // const newFood = new Food("1", "Eggs", "White Egss", 432);
-    //   state.pages.map((page: { id: string; meals: { foods: {}[] }[] }) => {
-    //     if (page.id === "1") {
-    //       const meals = page?.meals.find((meal: any) => meal.id === "1");
-    //       return meals?.foods.push(action.payload);
-    //     }
-    //     return page;
-    //   });
-    // },
-    getPageCalories: (state: State, action) => {
+    getPageCalories: (state, action) => {
       state.pages.map(
         (page: {
           id: string;
@@ -182,7 +197,7 @@ export const diarySlice = createSlice({
         }
       );
     },
-    getMealCalories: (state: State) => {
+    getMealCalories: (state) => {
       state.pages.map(
         (page: {
           id: string;
@@ -226,6 +241,40 @@ export const diarySlice = createSlice({
       })
       .addCase(addNewFood.pending, (state, action) => {
         state.isLoading = true;
+      })
+      .addCase(addNewFood.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.pages.map((page: Page) => {
+          return page.meals.map((meal: Meal) => {
+            if (meal.id === action.payload.mealId) {
+              meal.foods.push({
+                id: action.payload.id,
+                title: action.payload.title,
+                servingsSize: action.payload.servingsSize,
+                servingsNumber: action.payload.servingsNumber,
+                calories: action.payload.calories,
+              });
+              return meal;
+            }
+          });
+        });
+      })
+      .addCase(deleteFood.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteFood.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.pages.map((page: Page) => {
+          if (page.id === action.payload.pageId) {
+            return page.meals.map((meal: Meal) => {
+              if (meal.id === action.payload.mealId) {
+                return meal.foods.filter((food: Food) => {
+                  food.id !== action.payload.foodId;
+                });
+              }
+            });
+          }
+        });
       });
   },
 });
