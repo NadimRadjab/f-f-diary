@@ -3,14 +3,27 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import SearchAllScreen from "../../screens/Diary/TopNavigation/SearchAllScreen";
 import MyMealsScreen from "../../screens/Diary/TopNavigation/MyMealsScreen";
 import FoodSearch from "../../components/Diary/FoodSearch";
+import { RouteProp } from "@react-navigation/native";
+import { DiaryParamList } from "./DiaryParamList";
 const Tab = createMaterialTopTabNavigator();
 
-const DiaryTopNavigator = () => {
+const DiaryTopNavigator = ({
+  route,
+}: {
+  route: RouteProp<DiaryParamList, "FoodSearch">;
+}) => {
   return (
     <>
       <FoodSearch />
-      <Tab.Navigator>
-        <Tab.Screen name="Search" component={SearchAllScreen} />
+      <Tab.Navigator initialRouteName="SearchNav">
+        <Tab.Screen
+          options={({ route }) => ({
+            title: "Search",
+          })}
+          initialParams={{ mealId: route.params.mealId }}
+          name="Search"
+          component={SearchAllScreen}
+        />
         <Tab.Screen
           options={{ title: "My meals" }}
           name="MyMeals"

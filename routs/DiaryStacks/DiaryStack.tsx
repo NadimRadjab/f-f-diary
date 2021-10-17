@@ -3,7 +3,6 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Diary from "../../screens/Diary/DiaryScreen";
 import { DiaryParamList } from "./DiaryParamList";
 import DiaryTopNavigator from "./DiaryTopNavigator";
-import { TouchableOpacity, Text } from "react-native";
 const Stack = createNativeStackNavigator<DiaryParamList>();
 const DiaryStack = () => {
   return (
@@ -18,7 +17,7 @@ const DiaryStack = () => {
 
       <Stack.Screen
         options={({ route }) => ({
-          title: route.params.title,
+          title: route.params.mealId,
           headerShown: false,
         })}
         name="FoodSearch"

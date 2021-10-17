@@ -2,15 +2,21 @@ import { VStack, Heading, Divider, Text } from "native-base";
 import React from "react";
 import { TouchableOpacity, StyleSheet, Platform, Button } from "react-native";
 import { useAppSelector } from "../../redux/hooks";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { DiaryParamList } from "../../routs/DiaryStacks/DiaryParamList";
 import FoodList from "./FoodList";
 
 const MealsCard = ({
-  handleLocation,
   meal,
+  navigation,
 }: {
-  handleLocation: () => void;
-  meal: { id: string; foods: {}[]; calories: number };
+  navigation: NativeStackNavigationProp<DiaryParamList, "DiaryStack">;
+  meal: { id: string; foods: {}[]; calories: number; mealNumber: number };
 }) => {
+  const handleLocation = () => {
+    navigation.navigate("FoodSearch", { mealId: meal.id });
+  };
+
   return (
     <VStack
       borderRadius="2xl"
@@ -21,12 +27,12 @@ const MealsCard = ({
       alignItems="center"
       padding="2"
     >
-      <Heading color="muted.600">Meal {meal.id}</Heading>
+      <Heading color="muted.600">Meal {meal.mealNumber}</Heading>
       <Text color="warmGray.500">Total Calories: {meal.calories}</Text>
       <Divider my="1" />
 
       {meal.foods?.map((food, i) => (
-        <FoodList isSearched={false} key={i} food={food} />
+        <FoodList mealId={meal.id} isSearched={false} key={i} food={food} />
       ))}
 
       {Platform.OS === "android" ? (

@@ -1,11 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { firestore, firestoreFunc } from "../../../firebase";
 import Meal from "../../../seeds/Meal";
-import Page from "../../../seeds/Page";
+import { v4 as uuid4 } from "uuid";
 
-export const mealCreator = (arr: {}[]) => {
+export const mealCreator = (arr: {}[], pageNumber: string) => {
   for (let i = 1; i < 6; i++) {
-    arr.push({ ...new Meal(i.toString(), [], 0) });
+    arr.push({ ...new Meal(uuid4(), pageNumber, i, [], 0) });
   }
 };
 
@@ -15,8 +15,10 @@ export const getOwnerDiary = createAsyncThunk(
     let ownersIds = [] as any;
     let ownerDiary = {
       id: "",
+      date: "",
       ownerId: "",
-      pages: [],
+      pages: [] as any,
+      meals: [] as any,
     };
     const diary = await firestore.collection("diaries").get();
 
@@ -28,31 +30,51 @@ export const getOwnerDiary = createAsyncThunk(
       diary.docs.forEach((doc) => {
         if (doc.data().ownerId === ownerId) {
           ownerDiary.id = doc.id;
-          (ownerDiary.ownerId = doc.data()?.ownerId),
-            (ownerDiary.pages = doc.data()?.pages);
+          ownerDiary.date = doc.data().date;
+          ownerDiary.ownerId = doc.data()?.ownerId;
+          ownerDiary.pages = doc.data()?.pages;
+          ownerDiary.meals = doc.data()?.meals;
         }
       });
     } else {
       let arr = [] as any;
-      mealCreator(arr);
+      mealCreator(arr, "0");
       const res = await firestore.collection("diaries").add({
         ownerId: "u1",
+        date: new Date().toISOString(),
         pages: [
           {
-            id: "1",
+            id: "0",
             date: new Date().toISOString(),
             ownerId: "1",
-            meals: arr,
+            meals: [],
           },
         ],
+        meals: arr,
       });
 
-      const data = res.get().then((doc) => {
+      res.get().then((doc) => {
         ownerDiary.id = doc.id;
-        (ownerDiary.ownerId = doc.data()?.ownerId),
-          (ownerDiary.pages = doc.data()?.pages);
+        ownerDiary.date = doc.data()?.data;
+        ownerDiary.ownerId = doc.data()?.ownerId;
+        ownerDiary.pages = doc.data()?.pages;
+        ownerDiary.meals = doc.data()?.meals;
       });
     }
+    ownerDiary.pages.map((page: { id: string; meals: {}[] }) => {
+      for (let meal of ownerDiary.meals) {
+        if (meal.inPage === page.id) {
+          page.meals.push(meal);
+        }
+      }
+      // page.meals = ownerDiary.meals.map((meal: { inPage: string }) => {
+      //   if (meal.inPage === page.id) {
+      //     console.log(meal);
+      //     page.meals.push({ ...meal });
+      //     return page;
+      //   }
+      // });
+    });
 
     return ownerDiary;
   }
@@ -64,20 +86,46 @@ export const createNewPage = createAsyncThunk(
     newPage: {
       id: string;
       date: string;
-      meals: Meals[];
+      meals: {}[];
       totalcal: number;
     };
+    newArr: {}[];
   }) => {
-    const data = await firestore
+    await firestore
       .collection("diaries")
       .doc(items.diaryId)
-      .update({ pages: firestoreFunc.FieldValue.arrayUnion(items.newPage) });
+      .update({
+        pages: firestoreFunc.FieldValue.arrayUnion(items.newPage),
+        meals: firestoreFunc.FieldValue.arrayUnion(...items.newArr),
+      });
+    items.newPage.meals = items.newArr;
     return items.newPage;
+  }
+);
+export const addNewFood = createAsyncThunk(
+  "food/addNewFood",
+  async (items: { diaryId: string; mealId: string; food: {} }) => {
+    let newArr = [] as any;
+    const data = await firestore.collection("diaries").get();
+    data.forEach((doc) => {
+      newArr = doc.data().meals.map((meal: Meals) => {
+        if (meal.id === items.mealId) {
+          meal.foods.push(items.food);
+          return meal;
+        }
+        return meal;
+      });
+    });
+    await firestore
+      .collection("diaries")
+      .doc(items.diaryId)
+      .update({ meals: newArr });
   }
 );
 
 interface Meals {
   id: string;
+  mealNumber: number;
   foods: {}[];
   calories: number;
 }
@@ -95,59 +143,7 @@ interface State {
 const initialState: State = {
   ownerId: "u1",
   id: "",
-  pages: [
-    {
-      date: "2021-10-14T09:33:15.577Z",
-      id: "1",
-      meals: [
-        {
-          calories: 0,
-          foods: [
-            {
-              title: "Pizza Buddy: Frozen Pizza Dough, 16 Oz",
-              servingsSize: 50,
-              servingsNumber: 8,
-              calories: 53,
-            },
-          ],
-          id: "1",
-        },
-        {
-          calories: 0,
-          foods: [],
-          id: "2",
-        },
-        {
-          calories: 0,
-          foods: [
-            {
-              title: "Pizza Buddy: Frozen Pizza Dough, 16 Oz",
-              servingsSize: 80,
-              servingsNumber: 8,
-              calories: 23,
-            },
-          ],
-          id: "3",
-        },
-        {
-          calories: 0,
-          foods: [],
-          id: "4",
-        },
-        {
-          calories: 0,
-          foods: [],
-          id: "5",
-        },
-        {
-          calories: 0,
-          foods: [],
-          id: "6",
-        },
-      ],
-      totalcal: 0,
-    },
-  ],
+  pages: [],
   isLoading: false,
 };
 export const diarySlice = createSlice({
@@ -224,9 +220,12 @@ export const diarySlice = createSlice({
       .addCase(createNewPage.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(createNewPage.fulfilled, (state, action) => {
+      .addCase(createNewPage.fulfilled, (state, action: any) => {
         state.isLoading = false;
         state.pages.push(action.payload);
+      })
+      .addCase(addNewFood.pending, (state, action) => {
+        state.isLoading = true;
       });
   },
 });

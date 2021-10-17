@@ -1,16 +1,18 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { DiaryParamList } from "../../routs/DiaryStacks/DiaryParamList";
 import { Heading, ScrollView, Text, View } from "native-base";
 import React, { useEffect, useState } from "react";
 import { TouchableOpacity } from "react-native";
 import MealsCard from "../../components/Diary/MealsCard";
+import { v4 as uuidv4 } from "uuid";
 import {
   mealCreator,
   getPageCalories,
   getMealCalories,
   createNewPage,
+  getOwnerDiary,
 } from "../../redux/features/Diary/diarySlice";
 import { useAppDipsatch, useAppSelector } from "../../redux/hooks";
-import { DiaryParamList } from "../../routs/DiaryStacks/DiaryParamList";
 
 const HomeScreen = ({
   navigation,
@@ -24,21 +26,18 @@ const HomeScreen = ({
 
   const lastPage = pages[prevPage];
 
-  const handleLocation = () => {
-    navigation.navigate("FoodSearch", { title: "Meal 1" });
-  };
-
   const handleNewPage = () => {
     let newArr = [] as any;
-    mealCreator(newArr);
+    mealCreator(newArr, pages.length.toString());
     const newPage = {
       id: pages.length.toString(),
       date: new Date().toISOString(),
-      meals: newArr,
+      meals: [] as any,
       totalcal: 0,
     };
+
     if (prevPage === pages.length - 1)
-      dispatch(createNewPage({ diaryId, newPage }));
+      dispatch(createNewPage({ diaryId, newPage, newArr }));
 
     setPrevPage(prevPage + 1);
   };
@@ -75,6 +74,10 @@ const HomeScreen = ({
     dispatch(getMealCalories());
     dispatch(getPageCalories(pageNumber.toString()));
   }, [dispatch, prevPage]);
+
+  useEffect(() => {
+    dispatch(getOwnerDiary("u1"));
+  }, [dispatch]);
   return (
     <ScrollView contentContainerStyle={{ alignItems: "center" }}>
       <Heading color="warmGray.700" p="7">
@@ -84,13 +87,15 @@ const HomeScreen = ({
         {!pages.length
           ? null
           : lastPage?.meals.map(
-              (meal: { id: string; foods: {}[]; calories: number }, i) => (
-                <MealsCard
-                  meal={meal}
-                  key={i}
-                  handleLocation={handleLocation}
-                />
-              )
+              (
+                meal: {
+                  id: string;
+                  foods: {}[];
+                  calories: number;
+                  mealNumber: number;
+                },
+                i
+              ) => <MealsCard meal={meal} key={i} navigation={navigation} />
             )}
       </View>
     </ScrollView>

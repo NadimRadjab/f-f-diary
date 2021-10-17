@@ -1,14 +1,16 @@
 import { View, Text } from "native-base";
 import React from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
-import { addFood } from "../../redux/features/Diary/diarySlice";
-import { useAppDipsatch } from "../../redux/hooks";
+import { addNewFood } from "../../redux/features/Diary/diarySlice";
+import { useAppDipsatch, useAppSelector } from "../../redux/hooks";
 
 interface Props {
   food: any;
+  mealId: string;
   isSearched: boolean;
 }
-const FoodList = ({ food, isSearched }: Props) => {
+const FoodList = ({ mealId, food, isSearched }: Props) => {
+  const diaryId = useAppSelector((state) => state.diary.id);
   const dispatch = useAppDipsatch();
   const handleMeal = () => {
     const newObject = {
@@ -17,7 +19,12 @@ const FoodList = ({ food, isSearched }: Props) => {
       servingsNumber: food.servings.number,
       calories: food.nutrition?.calories,
     };
-    dispatch(addFood(newObject));
+    const items = {
+      mealId: mealId,
+      food,
+      diaryId,
+    };
+    dispatch(addNewFood(items));
   };
   return (
     <TouchableOpacity onPress={handleMeal} style={styles.screen}>

@@ -7,9 +7,9 @@ import { store } from "./redux/store";
 import { getOwnerDiary } from "./redux/features/Diary/diarySlice";
 
 export default function App() {
-  useEffect(() => {
-    store.dispatch(getOwnerDiary("u1"));
-  }, []);
+  // useEffect(() => {
+  //   store.dispatch(getOwnerDiary("u1"));
+  // }, []);
   return (
     <Provider store={store}>
       <NativeBaseProvider>
