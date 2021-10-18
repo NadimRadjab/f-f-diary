@@ -3,10 +3,10 @@ import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { useAppDipsatch } from "../../redux/hooks";
 import { getFoods } from "../../redux/features/Diary/foodSlice";
-import { useDispatch } from "react-redux";
 
-const FoodSearch = () => {
+const FoodSearch = ({ navigation }: any) => {
   const [product, setProduct] = useState<string>("");
+
   const handleProduct = (value: string) => {
     setProduct(value);
   };
@@ -14,6 +14,10 @@ const FoodSearch = () => {
   const handleSubmit = () => {
     dispatch(getFoods(product));
     setProduct("");
+  };
+
+  const handleLocation = () => {
+    navigation.navigate("FoodScan");
   };
   return (
     <View>
@@ -39,7 +43,9 @@ const FoodSearch = () => {
           }
           placeholder="Search for a food"
         />
+
         <IconButton
+          onPress={handleLocation}
           icon={
             <Icon color="muted.600" as={<Ionicons name="barcode-outline" />} />
           }

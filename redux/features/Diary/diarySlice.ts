@@ -182,43 +182,31 @@ export const diarySlice = createSlice({
   initialState,
   reducers: {
     getPageCalories: (state, action) => {
-      state.pages.map(
-        (page: {
-          id: string;
-          totalcal: number;
-          meals: { calories: number; foods: {}[] }[];
-        }) => {
-          if (page.id === action.payload) {
-            page.totalcal = page.meals?.reduce((prev: any, cur) => {
-              return prev + cur.calories;
-            }, 0);
-          }
-          return page;
+      state.pages.map((page: Page) => {
+        if (page.id === action.payload) {
+          page.totalcal = page.meals.reduce((prev: any, cur) => {
+            return prev + cur.calories;
+          }, 0);
         }
-      );
+        return page;
+      });
     },
-    getMealCalories: (state) => {
-      state.pages.map(
-        (page: {
-          id: string;
-          totalcal: number;
-          meals: { calories: number; foods: {}[] }[];
-        }) => {
-          if (page.id === "1") {
-            const foodArr = page.meals.map((meal: any) => {
-              return meal.foods.reduce((prev: any, cur: any) => {
-                return prev + cur.calories;
-              }, 0);
-            });
+    getMealCalories: (state, action) => {
+      state.pages.map((page: Page) => {
+        if (page.id === action.payload) {
+          const foodArr = page.meals.map((meal: any) => {
+            return meal.foods.reduce((prev: any, cur: any) => {
+              return prev + cur.nutrition.calories;
+            }, 0);
+          });
 
-            for (let i = 0; i < foodArr.length; i++) {
-              page.meals[i].calories = foodArr[i];
-            }
+          for (let i = 0; i < foodArr.length; i++) {
+            page.meals[i].calories = foodArr[i];
           }
-
-          return page;
         }
-      );
+
+        return page;
+      });
     },
   },
   extraReducers: (builder) => {
@@ -266,8 +254,10 @@ export const diarySlice = createSlice({
         state.isLoading = false;
         state.pages.map((page: Page) => {
           if (page.id === action.payload.pageId) {
+            console.log(page.id === action.payload.pageId);
             return page.meals.map((meal: Meal) => {
               if (meal.id === action.payload.mealId) {
+                console.log(meal.id === action.payload.mealId);
                 return meal.foods.filter((food: Food) => {
                   food.id !== action.payload.foodId;
                 });

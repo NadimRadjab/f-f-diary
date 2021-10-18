@@ -89,7 +89,7 @@ const HomeScreen = ({
     });
   }, [prevPage, pages]);
   useEffect(() => {
-    dispatch(getMealCalories());
+    dispatch(getMealCalories(pageNumber.toString()));
     dispatch(getPageCalories(pageNumber.toString()));
   }, [dispatch, prevPage]);
   useEffect(() => {

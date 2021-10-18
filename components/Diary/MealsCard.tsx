@@ -5,12 +5,13 @@ import { useAppSelector } from "../../redux/hooks";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { DiaryParamList } from "../../routs/DiaryStacks/DiaryParamList";
 import FoodList from "./FoodList";
+import PageFoodList from "./PageFoodList";
 
 const MealsCard = ({
   meal,
   navigation,
 }: {
-  navigation: NativeStackNavigationProp<DiaryParamList, "DiaryStack">;
+  navigation: any;
   meal: {
     inPage: string;
     id: string;
@@ -26,7 +27,7 @@ const MealsCard = ({
   return (
     <VStack
       borderRadius="2xl"
-      w="90%"
+      w="95%"
       marginBottom="5"
       bg="white"
       space={3}
@@ -38,7 +39,7 @@ const MealsCard = ({
       <Divider my="1" />
 
       {meal.foods?.map((food, i) => (
-        <FoodList
+        <PageFoodList
           pageId={meal.inPage}
           mealId={meal.id}
           isSearched={false}
