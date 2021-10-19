@@ -1,5 +1,5 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { DiaryParamList } from "../../routs/DiaryStacks/DiaryParamList";
+import { DiaryParamList } from "../../routs/NavigationTypes";
 import { Heading, ScrollView, Text, View } from "native-base";
 import React, { useEffect, useState } from "react";
 import { Platform, TouchableOpacity } from "react-native";
@@ -91,13 +91,13 @@ const HomeScreen = ({
   useEffect(() => {
     dispatch(getMealCalories(pageNumber.toString()));
     dispatch(getPageCalories(pageNumber.toString()));
-  }, [dispatch, prevPage]);
+  }, [dispatch, prevPage, pages]);
   useEffect(() => {
     dispatch(getOwnerDiary("u1"));
   }, [dispatch]);
   useEffect(() => {
     setPrevPage(pages.length - 1);
-  }, [pages]);
+  }, [pages.length]);
   if (isLoading) return <Loading />;
   return (
     <ScrollView contentContainerStyle={{ alignItems: "center" }}>
@@ -117,7 +117,7 @@ const HomeScreen = ({
                   mealNumber: number;
                 },
                 i
-              ) => <MealsCard meal={meal} key={i} navigation={navigation} />
+              ) => <MealsCard meal={meal} key={i} />
             )}
       </View>
     </ScrollView>

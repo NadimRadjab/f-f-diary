@@ -149,9 +149,7 @@ export const deleteFood = createAsyncThunk(
     data.forEach((doc) => {
       newArr = doc.data().meals.map((meal: Meal) => {
         if (meal.id === items.mealId) {
-          meal.foods = meal.foods.filter(
-            (food: any) => food.id !== items.foodId
-          );
+          meal.foods = meal.foods.filter((food: Food) => food.id !== "22");
           return meal;
         }
         return meal;
@@ -250,20 +248,31 @@ export const diarySlice = createSlice({
       .addCase(deleteFood.pending, (state, action) => {
         state.isLoading = true;
       })
-      .addCase(deleteFood.fulfilled, (state, action) => {
+      .addCase(deleteFood.fulfilled, (state: DiaryState, action) => {
         state.isLoading = false;
+
+        const findPage = state.pages.find(
+          (page: Page) => page.id === action.payload.pageId
+        );
+
+        const findMeal = findPage?.meals.find(
+          (meal: Meal) => meal.id === action.payload.mealId
+        );
+
+        const filterdFood = findMeal?.foods.filter((food: Food) => {
+          return food.id !== action.payload.foodId;
+        });
+
         state.pages.map((page: Page) => {
           if (page.id === action.payload.pageId) {
-            console.log(page.id === action.payload.pageId);
-            return page.meals.map((meal: Meal) => {
+            return page.meals.map((meal: any) => {
               if (meal.id === action.payload.mealId) {
-                console.log(meal.id === action.payload.mealId);
-                return meal.foods.filter((food: Food) => {
-                  food.id !== action.payload.foodId;
-                });
+                return (meal.foods = filterdFood);
               }
+              return meal;
             });
           }
+          return page;
         });
       });
   },

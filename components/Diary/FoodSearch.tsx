@@ -3,8 +3,11 @@ import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { useAppDipsatch } from "../../redux/hooks";
 import { getFoods } from "../../redux/features/Diary/foodSlice";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { DiaryParamList } from "../../routs/NavigationTypes";
 
-const FoodSearch = ({ navigation }: any) => {
+const FoodSearch = () => {
   const [product, setProduct] = useState<string>("");
 
   const handleProduct = (value: string) => {
@@ -15,6 +18,8 @@ const FoodSearch = ({ navigation }: any) => {
     dispatch(getFoods(product));
     setProduct("");
   };
+  const navigation =
+    useNavigation<NativeStackNavigationProp<DiaryParamList, "FoodSearch">>();
 
   const handleLocation = () => {
     navigation.navigate("FoodScan");

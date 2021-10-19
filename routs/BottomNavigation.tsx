@@ -42,7 +42,7 @@ const BottomNavigation = () => {
           headerShown: false,
           title: "Weakly Plans",
         }}
-        name="Weakly Plans"
+        name="WeaklyPlans"
         component={WeaklyPlansStack}
       />
     </Tab.Navigator>

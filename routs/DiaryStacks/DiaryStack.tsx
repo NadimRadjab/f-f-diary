@@ -1,9 +1,8 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Diary from "../../screens/Diary/DiaryScreen";
-import { DiaryParamList } from "./DiaryParamList";
+import { DiaryParamList } from "../NavigationTypes";
 import DiaryTopNavigator from "./DiaryTopNavigator";
-
 import CodeScannerScreen from "../../screens/Diary/CodeScannerScreen";
 const Stack = createNativeStackNavigator<DiaryParamList>();
 

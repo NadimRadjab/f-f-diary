@@ -1,17 +1,12 @@
 import { VStack, Heading, Divider, Text } from "native-base";
 import React from "react";
 import { TouchableOpacity, StyleSheet, Platform, Button } from "react-native";
-import { useAppSelector } from "../../redux/hooks";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { DiaryParamList } from "../../routs/DiaryStacks/DiaryParamList";
-import FoodList from "./FoodList";
+import { DiaryParamList } from "../../routs/NavigationTypes";
 import PageFoodList from "./PageFoodList";
+import { useNavigation } from "@react-navigation/native";
 
-const MealsCard = ({
-  meal,
-  navigation,
-}: {
-  navigation: any;
+interface Props {
   meal: {
     inPage: string;
     id: string;
@@ -19,7 +14,10 @@ const MealsCard = ({
     calories: number;
     mealNumber: number;
   };
-}) => {
+}
+const MealsCard: React.FC<Props> = ({ meal }) => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<DiaryParamList, "DiaryStack">>();
   const handleLocation = () => {
     navigation.navigate("FoodSearch", { mealId: meal.id });
   };

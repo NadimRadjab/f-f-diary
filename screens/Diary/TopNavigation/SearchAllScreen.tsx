@@ -1,11 +1,14 @@
-import { ScrollView, Text } from "native-base";
+import { RouteProp, useRoute } from "@react-navigation/native";
+import { ScrollView } from "native-base";
 import React from "react";
 import FoodList from "../../../components/Diary/FoodList";
 import { useAppSelector } from "../../../redux/hooks";
+import { DiaryTopParamList } from "../../../routs/NavigationTypes";
 
-const SearchAllScreen = ({ route, navigation }: any) => {
+const SearchAllScreen = () => {
   const foods = useAppSelector((state) => state.foods.foods);
 
+  const route = useRoute<RouteProp<DiaryTopParamList, "Search">>();
   return (
     <ScrollView flex="1" mt="3">
       {foods?.map((food) => (
