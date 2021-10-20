@@ -9,7 +9,7 @@ const CodeScannerScreen = ({ navigation }: any) => {
   const handleBarCodeScanned = (scanningResult: BarCodeScannerResult) => {
     const { type, data, bounds: { origin } = {} } = scanningResult;
     setScanned(true);
-    navigation.navigate("Search", { type: type, data: data });
+    navigation.navigate("ScannedFoodDetails", { type: type, data: data });
   };
 
   useEffect(() => {
@@ -25,9 +25,6 @@ const CodeScannerScreen = ({ navigation }: any) => {
       }
     })();
   }, []);
-  // useEffect(() => {
-  //   if (scanned) navigation.goBack();
-  // }, [scanned]);
   return (
     <View flex="1" bg="white" alignItems="center" justifyContent="center">
       <BarCodeScanner

@@ -43,15 +43,6 @@ const FoodList = ({ pageId, mealId, food, isSearched }: Props) => {
   }
   return (
     <TouchableOpacity onPress={handleMeal} style={styles.screen}>
-      <Box mb="5">
-        <IconButton
-          onPress={() =>
-            dispatch(deleteFood({ pageId, mealId, diaryId, foodId: food.id }))
-          }
-          size={30}
-          _icon={{ as: Ionicons, name: "close-outline" }}
-        />
-      </Box>
       <View bg="#fffffc" style={styles.listContainer}>
         <View p="3" style={styles.list}>
           <View flexDirection="row" justifyContent="space-around">

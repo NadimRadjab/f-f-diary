@@ -6,6 +6,7 @@ export type DiaryParamList = {
     type?: string;
   };
   FoodScan: undefined;
+  ScannedFoodDetails: undefined;
 };
 
 export type DiaryTopParamList = {

@@ -3,7 +3,9 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Diary from "../../screens/Diary/DiaryScreen";
 import { DiaryParamList } from "../NavigationTypes";
 import DiaryTopNavigator from "./DiaryTopNavigator";
+
 import CodeScannerScreen from "../../screens/Diary/CodeScannerScreen";
+import FoodDetailsScreen from "../../screens/Diary/FoodDetailsScreen";
 const Stack = createNativeStackNavigator<DiaryParamList>();
 
 const DiaryStack = () => {
@@ -33,6 +35,14 @@ const DiaryStack = () => {
         })}
         name="FoodScan"
         component={CodeScannerScreen}
+      />
+      <Stack.Screen
+        options={({ route }) => ({
+          title: "Food Details",
+          headerShown: true,
+        })}
+        name="ScannedFoodDetails"
+        component={FoodDetailsScreen}
       />
     </Stack.Navigator>
   );
