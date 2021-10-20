@@ -1,17 +1,20 @@
-import { Text, View, Badge } from "native-base";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { ScrollView, SectionList, Text, View } from "native-base";
 import React, { useState } from "react";
 import { Button, TouchableOpacity } from "react-native";
-import FoodSearch from "../../components/Diary/FoodSearch";
 import RecipeCard from "../../components/Recipe/RecipeCard";
+import RecipeSearch from "../../components/Recipe/RecipeSearch";
 import { getRecipes } from "../../redux/features/Recipes/recipeSlice";
 import { useAppDipsatch } from "../../redux/hooks";
+import { RecipieParamList } from "../../routs/NavigationTypes";
 import filtersData from "../../seeds/filtersData";
 
 const RecipeScreen = () => {
   const [filters, setFilters] = useState(filtersData);
   const [selected, setSelected] = useState<any>([]);
   const dispatch = useAppDipsatch();
-  const handleFilters = (key: string, id: string): void => {
+  const handleFilters = (id: string): void => {
     const newArr = filters.map((item) => {
       if (item.id === id) {
         item.isSelected = !item.isSelected;
@@ -27,18 +30,48 @@ const RecipeScreen = () => {
     setFilters(newArr);
     setSelected(query);
   };
-  const handleSumbit = () => {
-    dispatch(getRecipes(selected));
+  const handleQuery = (recipe: string) => {
+    dispatch(getRecipes({ selected, recipe }));
   };
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RecipieParamList, "RecipeStack">>();
 
   return (
     <View bg="white" flex="1">
-      <FoodSearch />
-
+      <RecipeSearch handleQuery={handleQuery} />
+      <View w="100%" alignItems="center">
+        <Text fontSize="16">Applied Filters</Text>
+        <ScrollView>
+          <ScrollView mb="4" w="300" horizontal={true}>
+            {filters.map((filter, i) => {
+              if (filter.isSelected) {
+                return (
+                  <TouchableOpacity
+                    onPress={() => handleFilters(filter.id)}
+                    style={{ margin: 4, width: "35%" }}
+                    key={i}
+                  >
+                    <View
+                      w="90%"
+                      alignItems="center"
+                      borderRadius="10"
+                      bg={filter.color}
+                    >
+                      <Text fontSize="15" color="light.800">
+                        {filter.title}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                );
+              }
+            })}
+          </ScrollView>
+        </ScrollView>
+      </View>
       <View
         borderWidth="1"
         p="2"
-        borderColor="warmGray.300"
+        borderColor="warmGray.100"
         flexDirection="row"
         overflow="hidden"
         flexWrap="wrap"
@@ -46,7 +79,7 @@ const RecipeScreen = () => {
       >
         {filters.map((f, i) => (
           <TouchableOpacity
-            onPress={() => handleFilters(f.title, f.id)}
+            onPress={() => handleFilters(f.id)}
             style={{ margin: 4, width: "35%" }}
             key={f.id}
           >
@@ -63,7 +96,7 @@ const RecipeScreen = () => {
           </TouchableOpacity>
         ))}
       </View>
-      <Button title="Press" onPress={handleSumbit} />
+
       <RecipeCard />
     </View>
   );

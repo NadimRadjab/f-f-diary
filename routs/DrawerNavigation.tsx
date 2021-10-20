@@ -2,8 +2,10 @@ import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import BottomNavigation from "./BottomNavigation";
 import { Platform } from "react-native";
+import { DrawerParamList } from "./NavigationTypes";
+import { Ionicons } from "@expo/vector-icons";
 
-const Stack = createDrawerNavigator();
+const Stack = createDrawerNavigator<DrawerParamList>();
 const DrawerNavigation = () => {
   return (
     <Stack.Navigator
@@ -21,7 +23,10 @@ const DrawerNavigation = () => {
     >
       <Stack.Screen
         options={({ route }) => ({
-          title: "Diary",
+          title: "Food Hangout",
+          drawerIcon: () => (
+            <Ionicons color="#c2410c" size={23} name="bonfire" />
+          ),
         })}
         name="Home"
         component={BottomNavigation}

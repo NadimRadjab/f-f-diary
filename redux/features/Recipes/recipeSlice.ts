@@ -4,13 +4,14 @@ import axios from "axios";
 
 export const getRecipes = createAsyncThunk(
   "recipe/getRecipes",
-  async (items: []) => {
+  async (items: { recipe: string; selected: [] }) => {
     // const response = await axios.get(
     //   `https://api.spoonacular.com/recipes/complexSearch?query='pasta'&${items
     //     .join("&")
     //     .toLowerCase()}&apiKey=${SPOO_API_KEY}`
     // );
     // console.log(response.data);
+    console.log(items);
   }
 );
 interface RecipesState {

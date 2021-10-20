@@ -1,3 +1,8 @@
+export type DrawerParamList = {
+  Home: {
+    drawerTitle: string;
+  };
+};
 export type DiaryParamList = {
   DiaryStack: undefined;
   FoodSearch: {
@@ -22,4 +27,9 @@ export type BottomNavParamList = {
   Diary: undefined;
   Recipes: undefined;
   WeaklyPlans: undefined;
+};
+export type RecipieParamList = {
+  RecipeStack: {
+    drawerTitle: string;
+  };
 };
