@@ -9,23 +9,28 @@ interface ApiResponse<T> {
 interface FoodsData {
   products: { id: string }[];
 }
+interface ScannedFoodData {
+  serving_size?: string;
+  serving_quantity?: string;
+  _keywords?: string[];
+  _id?: string;
+  product_name: string;
+  image_front_url?: string;
+  ingredients_text?: string;
+  nutriments?: {
+    [energy: string]: string;
+    ["fat"]: string;
+    ["carbohydrates"]: string;
+    ["fibers"]: string;
+    ["proteins"]: string;
+    ["salt"]: string;
+    ["sodium"]: string;
+  };
+}
 
 interface FoodState {
   foods: { id: string }[] | undefined;
-  scannedFood: {
-    product_name?: string;
-    image_front_url?: string;
-    ingredients_text?: string;
-    nutriments?: {
-      [energy: string]: string;
-      ["fat"]: string;
-      ["carbohydrates"]: string;
-      ["fibers"]: string;
-      ["proteins"]: string;
-      ["salt"]: string;
-      ["sodium"]: string;
-    };
-  };
+  scannedFood: ScannedFoodData;
   isLoading: boolean;
 }
 
@@ -52,7 +57,9 @@ export const getScannedFood = createAsyncThunk(
 
 const initialState: FoodState = {
   foods: [],
-  scannedFood: {},
+  scannedFood: {
+    product_name: "",
+  },
   isLoading: false,
 };
 

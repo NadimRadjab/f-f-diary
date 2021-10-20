@@ -23,9 +23,8 @@ const PageFoodList = ({ pageId, mealId, food, isSearched }: Props) => {
     <View w="100%">
       <View bg="#fffffc" style={styles.listContainer}>
         <View p="3" style={styles.list}>
-          <View flexDirection="row" justifyContent="space-around">
-            <Text>{food.title}</Text>
-            {!isSearched && null}
+          <View justifyContent="space-around">
+            <Text fontSize="18">{food.title}</Text>
           </View>
 
           <View
@@ -35,15 +34,7 @@ const PageFoodList = ({ pageId, mealId, food, isSearched }: Props) => {
             justifyContent="space-between"
           >
             <View mt="3">
-              <Text>
-                Searvings Size:
-                {isSearched ? food.servings.size : food.servingsSize}
-              </Text>
-
-              <Text>
-                Searvings Number:
-                {isSearched ? food.servings.number : food.servingsNumber}
-              </Text>
+              <Text>Searvings Size: {food.servingsSize}</Text>
             </View>
             <View mt="3">
               <Text>
@@ -63,7 +54,6 @@ const PageFoodList = ({ pageId, mealId, food, isSearched }: Props) => {
 };
 const styles = StyleSheet.create({
   listContainer: {
-    justifyContent: "flex-start",
     borderBottomWidth: 1,
     padding: 10,
   },

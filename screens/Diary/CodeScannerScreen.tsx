@@ -2,14 +2,20 @@ import { View, Button } from "native-base";
 import React, { useState, useEffect } from "react";
 import { BarCodeScanner, BarCodeScannerResult } from "expo-barcode-scanner";
 import { Alert } from "react-native";
+import { RouteProp, useRoute } from "@react-navigation/native";
+import { DiaryParamList } from "../../routs/NavigationTypes";
 
 const CodeScannerScreen = ({ navigation }: any) => {
   const [scanned, setScanned] = useState<boolean>(false);
-
+  const route = useRoute<RouteProp<DiaryParamList, "FoodScan">>();
   const handleBarCodeScanned = (scanningResult: BarCodeScannerResult) => {
     const { type, data, bounds: { origin } = {} } = scanningResult;
     setScanned(true);
-    navigation.navigate("ScannedFoodDetails", { type: type, data: data });
+    navigation.navigate("ScannedFoodDetails", {
+      type: type,
+      data: data,
+      mealId: route.params.mealId,
+    });
   };
 
   useEffect(() => {

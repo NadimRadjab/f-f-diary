@@ -8,7 +8,6 @@ import { DiaryTopParamList } from "../../../routs/NavigationTypes";
 
 const SearchAllScreen = () => {
   const foods = useAppSelector((state) => state.foods.foods);
-  const dispatch = useAppDipsatch();
   const route = useRoute<RouteProp<DiaryTopParamList, "Search">>();
 
   return (

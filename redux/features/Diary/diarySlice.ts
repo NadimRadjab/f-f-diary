@@ -93,32 +93,31 @@ export const createNewPage = createAsyncThunk(
 //Add a new Food.
 export const addNewFood = createAsyncThunk(
   "food/addNewFood",
-  async (items: {
-    diaryId: string;
-    mealId: string;
-    newFood: {
-      id: string;
-      title: string;
-      badges: [];
-      servingsSize: number;
-      servingsNumber: number;
-      description: string;
-      images: [];
-      calories: number;
-    };
-    food: any;
-  }) => {
+  async (items: { diaryId: string; mealId?: string; newFood: any }) => {
     let newArr = [] as any;
+
     const data = await firestore.collection("diaries").get();
     data.forEach((doc) => {
+      const newObj: any = {
+        badges: items.newFood.badges,
+        id: items.newFood.id,
+        title: items.newFood.title,
+        description: !items.newFood.description && "",
+        images: items.newFood.images,
+        calories: items.newFood.calories,
+        servingsSize: !items.newFood.servingsSize && "",
+        nutrition: items.newFood.nutrition,
+      };
+
       newArr = doc.data().meals.map((meal: Meal) => {
         if (meal.id === items.mealId) {
-          meal.foods.push(items.food);
+          meal.foods.push(newObj);
           return meal;
         }
         return meal;
       });
     });
+
     await firestore
       .collection("diaries")
       .doc(items.diaryId)
@@ -149,7 +148,9 @@ export const deleteFood = createAsyncThunk(
     data.forEach((doc) => {
       newArr = doc.data().meals.map((meal: Meal) => {
         if (meal.id === items.mealId) {
-          meal.foods = meal.foods.filter((food: Food) => food.id !== "22");
+          meal.foods = meal.foods.filter(
+            (food: Food) => food.id !== items.foodId
+          );
           return meal;
         }
         return meal;
@@ -192,9 +193,9 @@ export const diarySlice = createSlice({
     getMealCalories: (state, action) => {
       state.pages.map((page: Page) => {
         if (page.id === action.payload) {
-          const foodArr = page.meals.map((meal: any) => {
+          const foodArr = page.meals.map((meal: Meal) => {
             return meal.foods.reduce((prev: any, cur: any) => {
-              return prev + cur.nutrition.calories;
+              return prev + cur.calories;
             }, 0);
           });
 

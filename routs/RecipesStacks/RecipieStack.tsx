@@ -12,6 +12,7 @@ const RecipieStack = () => {
       <Stack.Screen
         options={({ route }): any => ({
           title: "Recipes",
+          headerShown: Platform.OS === "ios" ? true : false,
           headerTitleStyle: {
             color: Platform.OS === "ios" ? "#0369a1" : null,
           },

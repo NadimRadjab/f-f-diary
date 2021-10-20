@@ -5,7 +5,7 @@ export type DiaryParamList = {
     data?: string;
     type?: string;
   };
-  FoodScan: undefined;
+  FoodScan: { mealId: string; data?: string };
   ScannedFoodDetails: undefined;
 };
 

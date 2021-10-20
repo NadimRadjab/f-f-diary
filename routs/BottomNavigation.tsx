@@ -22,6 +22,9 @@ const BottomNavigation = () => {
       <Tab.Screen
         options={{
           headerShown: true,
+          headerTitleStyle: {
+            color: "#0369a1",
+          },
           tabBarIcon: ({ color }: any) => (
             <MaterialIcons color={color} size={25} name="book" />
           ),

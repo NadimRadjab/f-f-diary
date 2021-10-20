@@ -7,7 +7,7 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { DiaryParamList } from "../../routs/NavigationTypes";
 
-const FoodSearch = () => {
+const FoodSearch = ({ mealId }: any) => {
   const [product, setProduct] = useState<string>("");
 
   const handleProduct = (value: string) => {
@@ -22,8 +22,9 @@ const FoodSearch = () => {
     useNavigation<NativeStackNavigationProp<DiaryParamList, "FoodSearch">>();
 
   const handleLocation = () => {
-    navigation.navigate("FoodScan");
+    navigation.navigate("FoodScan", { mealId });
   };
+
   return (
     <View>
       <View

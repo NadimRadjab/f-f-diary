@@ -14,7 +14,7 @@ const DiaryTopNavigator = ({
 }) => {
   return (
     <>
-      <FoodSearch />
+      <FoodSearch mealId={route.params.mealId} />
       <Tab.Navigator>
         <Tab.Screen
           options={({ route }) => ({

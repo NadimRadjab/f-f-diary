@@ -1,8 +1,8 @@
 export interface Food {
   id: string;
   title: string;
-  servingsSize: number;
-  servingsNumber: number;
+  servingsSize: number | string;
+  servingsNumber: number | string;
   calories: number;
 }
 export interface Meal {

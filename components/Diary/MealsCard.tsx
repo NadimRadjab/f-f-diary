@@ -36,7 +36,7 @@ const MealsCard: React.FC<Props> = ({ meal }) => {
       <Text color="warmGray.500">Total Calories: {meal.calories}</Text>
       <Divider my="1" />
 
-      {meal.foods?.map((food, i) => (
+      {meal.foods?.map((food: any, i) => (
         <PageFoodList
           pageId={meal.inPage}
           mealId={meal.id}

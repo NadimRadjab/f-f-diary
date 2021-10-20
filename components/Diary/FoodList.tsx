@@ -12,12 +12,12 @@ interface Props {
   isSearched: boolean;
   pageId: string | null;
 }
-const FoodList = ({ pageId, mealId, food, isSearched }: Props) => {
+const FoodList = ({ mealId, food, isSearched }: Props) => {
   const diaryId = useAppSelector((state) => state.diary.id);
   const dispatch = useAppDipsatch();
   const handleMeal = () => {
     if (!isSearched) return;
-    let newFood = {
+    const newFood = {
       id: food.id,
       title: food.title,
       servingsSize: food.servings.size,
@@ -26,11 +26,10 @@ const FoodList = ({ pageId, mealId, food, isSearched }: Props) => {
       badges: food.badges,
       description: food.description,
       images: food.images,
-      nutrition: food.nutriotion,
+      nutrition: food.nutrition,
     };
     const items = {
       mealId: mealId,
-      food,
       newFood,
       diaryId,
     };
@@ -45,32 +44,21 @@ const FoodList = ({ pageId, mealId, food, isSearched }: Props) => {
     <TouchableOpacity onPress={handleMeal} style={styles.screen}>
       <View bg="#fffffc" style={styles.listContainer}>
         <View p="3" style={styles.list}>
-          <View flexDirection="row" justifyContent="space-around">
+          <View justifyContent="space-around">
             <Text>{food.title}</Text>
-            {!isSearched && null}
           </View>
 
           <View
-            mt="3"
+            mt="2"
             borderTopWidth="0.3"
             flexDirection="row"
             justifyContent="space-between"
           >
             <View>
-              <Text>
-                Searvings Size:
-                {isSearched ? food.servings.size : food.servingsSize}
-              </Text>
-
-              <Text>
-                Searvings Number:
-                {isSearched ? food.servings.number : food.servingsNumber}
-              </Text>
+              <Text>Searvings Size: {food.servings.size}</Text>
             </View>
 
-            <Text>
-              kcal: {isSearched ? food.nutrition?.calories : food.calories}
-            </Text>
+            <Text>kcal: {food.nutrition?.calories}</Text>
           </View>
         </View>
       </View>
@@ -82,7 +70,7 @@ const styles = StyleSheet.create({
   listContainer: {
     alignItems: "center",
     borderBottomWidth: 1,
-    padding: 10,
+    padding: 4,
   },
   list: {
     width: "100%",
