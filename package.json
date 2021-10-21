@@ -27,6 +27,7 @@
     "@reduxjs/toolkit": "^1.6.2",
     "axios": "^0.23.0",
     "expo": "~42.0.1",
+    "expo-barcode-scanner": "~10.2.2",
     "expo-status-bar": "~1.0.4",
     "firebase": "8.2.3",
     "native-base": "^3.2.1",
@@ -38,6 +39,7 @@
     "react-native-pager-view": "5.0.12",
     "react-native-paper": "^4.9.2",
     "react-native-reanimated": "~2.2.0",
+    "react-native-redash": "^16.2.2",
     "react-native-safe-area-context": "3.2.0",
     "react-native-screens": "~3.4.0",
     "react-native-svg": "12.1.1",
@@ -49,8 +51,7 @@
     "redux-devtools-extension": "^2.13.9",
     "styled-components": "^5.3.1",
     "styled-system": "^5.1.5",
-    "uuidv4": "^6.2.12",
-    "expo-barcode-scanner": "~10.2.2"
+    "uuidv4": "^6.2.12"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",
