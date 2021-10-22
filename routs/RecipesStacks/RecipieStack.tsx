@@ -7,6 +7,7 @@ import RecipeScreen from "../../screens/Recipe/RecipeScreen";
 import { Platform } from "react-native";
 import { DrawerParamList, RecipieParamList } from "../NavigationTypes";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import RecipeDetailsScreen from "../../screens/Recipe/RecipeDetailsScreen";
 
 const Stack = createNativeStackNavigator<RecipieParamList>();
 const RecipieStack = () => {
@@ -28,6 +29,20 @@ const RecipieStack = () => {
         }}
         name="RecipeStack"
         component={RecipeScreen}
+      />
+      <Stack.Screen
+        options={({ route }): any => {
+          return {
+            title: route.params.recipe.title,
+            headerShown: true,
+            headerTitleStyle: {
+              color: "#0369a1",
+              fontFamily: "open-sans",
+            },
+          };
+        }}
+        name="RecipeDetails"
+        component={RecipeDetailsScreen}
       />
     </Stack.Navigator>
   );

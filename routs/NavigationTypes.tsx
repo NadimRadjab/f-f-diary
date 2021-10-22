@@ -1,3 +1,5 @@
+import { Recipe } from "../redux/features/Recipes/type";
+
 export type DrawerParamList = {
   Home: {
     drawerTitle: string;
@@ -31,5 +33,8 @@ export type BottomNavParamList = {
 export type RecipieParamList = {
   RecipeStack: {
     drawerTitle: string;
+  };
+  RecipeDetails: {
+    recipe: Recipe;
   };
 };

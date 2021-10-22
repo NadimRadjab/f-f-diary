@@ -21,8 +21,8 @@ const PageFoodList = ({ pageId, mealId, food, isSearched }: Props) => {
 
   return (
     <View w="100%">
-      <View bg="#fffffc" style={styles.listContainer}>
-        <View p="3" style={styles.list}>
+      <View bg="#fffffc" shadow={3} style={styles.listContainer}>
+        <View p="3">
           <View justifyContent="space-around">
             <Text fontSize="18">{food.title}</Text>
           </View>
@@ -54,10 +54,7 @@ const PageFoodList = ({ pageId, mealId, food, isSearched }: Props) => {
 };
 const styles = StyleSheet.create({
   listContainer: {
-    borderBottomWidth: 1,
-    padding: 10,
-  },
-  list: {
+    padding: 4,
     width: "100%",
   },
 });

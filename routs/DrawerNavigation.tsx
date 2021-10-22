@@ -12,6 +12,7 @@ const DrawerNavigation = () => {
       screenOptions={{
         headerShown: Platform.OS === "android" && true,
         drawerStyle: {},
+
         headerTintColor: "#f5f5f5",
         headerTitleStyle: {
           color: "#fafafa",
@@ -24,6 +25,7 @@ const DrawerNavigation = () => {
       <Stack.Screen
         options={({ route }) => ({
           title: "Food Hangout",
+
           drawerIcon: () => (
             <Ionicons color="#c2410c" size={23} name="bonfire" />
           ),

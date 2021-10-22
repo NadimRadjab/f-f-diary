@@ -1,4 +1,4 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import diarySlice from "./features/Diary/diarySlice";
 import foodSlice from "./features/Diary/foodSlice";
 import recipeSlice from "./features/Recipes/recipeSlice";
@@ -9,6 +9,11 @@ export const store = configureStore({
     foods: foodSlice,
     recipes: recipeSlice,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      immutableCheck: false,
+      serializableCheck: false,
+    }),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

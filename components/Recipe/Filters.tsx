@@ -1,6 +1,7 @@
 import React from "react";
 import { TouchableOpacity } from "react-native";
-import { Text, View } from "native-base";
+import { View } from "native-base";
+import CustomText from "../UI/CustomText";
 interface Props {
   handleFilters: (id: string) => void;
 
@@ -20,9 +21,9 @@ const Filters: React.FC<Props> = (props) => {
         borderRadius="10"
         bg={props.color}
       >
-        <Text fontSize="14" color="light.800">
+        <CustomText fontSize="14" color="light.50">
           {props.title}
-        </Text>
+        </CustomText>
       </View>
     </TouchableOpacity>
   );

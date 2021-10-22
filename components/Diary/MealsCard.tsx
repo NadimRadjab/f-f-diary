@@ -27,12 +27,14 @@ const MealsCard: React.FC<Props> = ({ meal }) => {
       borderRadius="2xl"
       w="95%"
       marginBottom="5"
-      bg="white"
+      _light={{ backgroundColor: "light.50" }}
       space={3}
       alignItems="center"
-      padding="2"
+      shadow={7}
     >
-      <Heading color="muted.600">Meal {meal.mealNumber}</Heading>
+      <Heading p="2" color="muted.600">
+        Meal {meal.mealNumber}
+      </Heading>
       <Text color="warmGray.500">Total Calories: {meal.calories}</Text>
       <Divider my="1" />
 
@@ -61,7 +63,7 @@ const styles = StyleSheet.create({
     width: 320,
     height: 50,
     backgroundColor: "#0ea5e9",
-
+    margin: 10,
     borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
