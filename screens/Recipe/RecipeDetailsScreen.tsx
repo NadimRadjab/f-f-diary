@@ -5,7 +5,7 @@ import { RecipieParamList } from "../../routs/NavigationTypes";
 import CustomText from "../../components/UI/CustomText";
 const RecipeDetailsScreen = () => {
   const route = useRoute<RouteProp<RecipieParamList, "RecipeDetails">>();
-  const { title, image, summary, analyzedInstructions, extendedIngredients } =
+  const { image, summary, analyzedInstructions, extendedIngredients } =
     route.params.recipe;
 
   return (
@@ -28,13 +28,13 @@ const RecipeDetailsScreen = () => {
       </Box>
       <Box alignItems="center">
         <CustomText size={"17"}>Ingredients</CustomText>
-        {extendedIngredients.map((ing) => (
+        {extendedIngredients.map((ing, i) => (
           <Box
             w="100%"
             p="3"
             borderBottomColor="warmGray.200"
             borderBottomWidth="1"
-            key={ing.id + ing.amount}
+            key={ing.id + ing.amount + i}
           >
             <CustomText>{ing.original}</CustomText>
           </Box>
@@ -61,7 +61,7 @@ const RecipeDetailsScreen = () => {
             flexWrap="wrap"
           >
             {step.ingredients.map((ingredient, i: any) => (
-              <Text key={`${ingredient.id}: ${i}`}>
+              <Text key={`${ingredient.id + i}: ${i}`}>
                 {step.ingredients.slice(-1).pop()?.name === ingredient.name
                   ? `${ingredient.name}`
                   : `${ingredient.name}, `}
@@ -75,8 +75,8 @@ const RecipeDetailsScreen = () => {
           )}
 
           <Box m="2" justifyContent="space-around" flexDirection="row">
-            {step.equipment?.map((eq) => (
-              <Text key={eq.id}>{eq.name}</Text>
+            {step.equipment?.map((eq, i) => (
+              <Text key={eq.id + i}>{eq.name}</Text>
             ))}
           </Box>
         </Box>

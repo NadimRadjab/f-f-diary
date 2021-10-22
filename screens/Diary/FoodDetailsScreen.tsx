@@ -69,7 +69,7 @@ const FoodDetailsScreen = () => {
           : food.product_name,
       headerRight: () => (
         <TouchableOpacity onPress={handleAddFood}>
-          <Text color="#0369a1" fontSize="16">
+          <Text color="#fff" fontSize="16">
             Add
           </Text>
         </TouchableOpacity>
@@ -122,9 +122,9 @@ const FoodDetailsScreen = () => {
       <View
         borderRightColor="light.400"
         w="95%"
-        borderWidth="1"
+        shadow={5}
         borderRadius="20"
-        backgroundColor="light.200"
+        backgroundColor="light.100"
         p="5"
         alignItems="center"
       >
@@ -141,7 +141,9 @@ const FoodDetailsScreen = () => {
       </View>
       <View flex="1" p="5" w="100%">
         <View
+          shadow={3}
           borderWidth="1"
+          borderRadius="4"
           justifyContent="space-between"
           alignItems="stretch"
           backgroundColor="lightBlue.300"

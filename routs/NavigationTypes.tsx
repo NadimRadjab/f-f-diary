@@ -38,3 +38,7 @@ export type RecipieParamList = {
     recipe: Recipe;
   };
 };
+export type WeaklyParamList = {
+  weaklyPlansSearch: undefined;
+  weeklyplan: undefined;
+};

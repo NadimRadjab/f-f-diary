@@ -10,7 +10,8 @@ const DrawerNavigation = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerShown: Platform.OS === "android" && true,
+        // headerShown: Platform.OS === "android" && true,
+        headerShown: false,
         drawerStyle: {},
 
         headerTintColor: "#f5f5f5",

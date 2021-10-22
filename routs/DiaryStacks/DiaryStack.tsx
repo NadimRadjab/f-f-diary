@@ -10,11 +10,17 @@ const Stack = createNativeStackNavigator<DiaryParamList>();
 
 const DiaryStack = () => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: "#0369a1",
+        },
+        headerTintColor: "white",
+      }}
+    >
       <Stack.Screen
         options={({ route }) => ({
-          headerTitleAlign: "center",
-          headerStyle: {},
+          title: "Diary",
         })}
         name="DiaryStack"
         component={Diary}
@@ -22,8 +28,7 @@ const DiaryStack = () => {
 
       <Stack.Screen
         options={({ route }) => ({
-          title: route.params.mealId,
-          headerShown: false,
+          title: "Search Food",
         })}
         name="FoodSearch"
         component={DiaryTopNavigator}
@@ -39,7 +44,6 @@ const DiaryStack = () => {
       <Stack.Screen
         options={({ route }) => ({
           title: "Food Details",
-          headerShown: true,
         })}
         name="ScannedFoodDetails"
         component={FoodDetailsScreen}

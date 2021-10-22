@@ -1,11 +1,11 @@
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { ScrollView, View, PresenceTransition } from "native-base";
+import { ScrollView, View } from "native-base";
 import React, { useState } from "react";
-import { FlatList } from "react-native";
+import { Animated, Platform } from "react-native";
 import Filters from "../../components/Recipe/Filters";
 import RecipeCard from "../../components/Recipe/RecipeCard";
-import RecipeSearch from "../../components/Recipe/RecipeSearch";
+import CustomSearch from "../../components/UI/CustomSearch";
 import Loading from "../../components/Utils/Loading";
 import { getRecipes } from "../../redux/features/Recipes/recipeSlice";
 import { Recipe } from "../../redux/features/Recipes/type";
@@ -19,7 +19,6 @@ const RecipeScreen = () => {
   const recipes = useAppSelector((state) => state.recipes.recipes);
   const isLoading = useAppSelector((state) => state.recipes.isLoading);
   const dispatch = useAppDipsatch();
-  const [isOpen, setIsOpen] = useState(true);
 
   const handleFilters = (id: string): void => {
     const newArr = filters.map((item) => {
@@ -45,44 +44,38 @@ const RecipeScreen = () => {
   const handleLocation = (recipe: Recipe) => {
     navigation.navigate("RecipeDetails", { recipe });
   };
+  const HEADER_HIGHT = 110;
+  const scrollY = new Animated.Value(0);
+  const diffClampScrollY = Animated.diffClamp(scrollY, 0, HEADER_HIGHT);
+  const headerY = diffClampScrollY.interpolate({
+    inputRange: [0, HEADER_HIGHT],
+    outputRange: [0, -HEADER_HIGHT],
+  });
 
   return (
     <View flex="1" bg="white">
-      <PresenceTransition
-        visible={isOpen}
-        initial={{ translateY: -350 }}
-        animate={{ translateY: 0, transition: { duration: 550 } }}
-      >
-        <RecipeSearch selectedFilters={selected} handleQuery={handleQuery} />
-        {/* <View w="100%" alignItems="center">
-          <Text mb="4" fontSize="16">
-            Applied Filters
-          </Text>
-        </View> */}
-        {/* <ScrollView
-          showsHorizontalScrollIndicator={false}
-          w="100%"
-          horizontal={true}
-        >
-          {filters.map((filter, i) => {
-            if (filter.isSelected) {
-              return (
-                <Filters
-                  key={i}
-                  color={filter.color}
-                  id={filter.id}
-                  handleFilters={handleFilters}
-                  title={filter.title}
-                />
-              );
-            }
-          })}
-        </ScrollView> */}
+      <Animated.View
+        style={{
+          zIndex: 1000,
+          position: "absolute",
+          left: 0,
+          right: 0,
+          top: 0,
+          backgroundColor: "white",
+          height: 105,
 
+          transform: [{ translateY: headerY }],
+        }}
+      >
+        {/* <RecipeSearch selectedFilters={selected} handleQuery={handleQuery} /> */}
+        <CustomSearch
+          placeholder={"Search for a recipe..."}
+          selectedFilters={selected}
+          handleQuery={handleQuery}
+        />
         <ScrollView
           showsHorizontalScrollIndicator={false}
           borderBottomWidth="1"
-          p="1"
           mb="1"
           horizontal={true}
           borderColor="warmGray.100"
@@ -90,8 +83,6 @@ const RecipeScreen = () => {
           contentContainerStyle={{ justifyContent: "space-around" }}
         >
           {filters.map((filter, i) => {
-            // if (filter.isSelected) return null;
-            // if (!filter.isSelected)
             return (
               <Filters
                 key={i}
@@ -103,17 +94,22 @@ const RecipeScreen = () => {
             );
           })}
         </ScrollView>
-      </PresenceTransition>
+      </Animated.View>
       {isLoading ? (
         <Loading />
       ) : (
-        <FlatList
+        <Animated.FlatList
+          bounces={false}
+          scrollEventThrottle={16}
           onScroll={(e) => {
-            if (e.nativeEvent.contentOffset.y > 0) setIsOpen(false);
-            if (e.nativeEvent.contentOffset.y <= 200) setIsOpen(true);
+            scrollY.setValue(e.nativeEvent.contentOffset.y);
           }}
+          style={{ flex: 1, paddingBottom: 1 }}
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ alignItems: "center" }}
+          contentContainerStyle={{
+            alignItems: "center",
+            justifyContent: "center",
+          }}
           data={recipes}
           keyExtractor={(item) => item.id.toString()}
           renderItem={(item) => {

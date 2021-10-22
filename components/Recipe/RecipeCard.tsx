@@ -10,6 +10,7 @@ import {
 } from "native-base";
 import { TouchableOpacity } from "react-native";
 import { Recipe } from "../../redux/features/Recipes/type";
+
 interface Props {
   recipe: Recipe;
   handleLocation: (recipe: Recipe) => void;
@@ -21,13 +22,15 @@ const RecipeCard: React.FC<Props> = ({ recipe, handleLocation }) => {
 
   return (
     <Box
-      m="5"
+      margin="100"
       rounded="lg"
       width="350"
+      height="500"
       overflow="hidden"
       shadow={5}
+      backgroundColor="black"
       _light={{ backgroundColor: "gray.100" }}
-      _dark={{ backgroundColor: "gray.700" }}
+      _dark={{ backgroundColor: "gray.600" }}
     >
       <TouchableOpacity onPress={handleNavigation} style={{ flex: 1 }}>
         <Box>
@@ -57,7 +60,7 @@ const RecipeCard: React.FC<Props> = ({ recipe, handleLocation }) => {
             </Text>
           </Stack>
           <Text fontWeight="400">
-            {recipe.summary.substr(0, 80).replace(/[</b>]/g, "")}...
+            {recipe.summary.substr(0, 300).replace(/<[/]?(b)>/gi, "")}...
           </Text>
           <HStack alignItems="center" space={4} justifyContent="space-between">
             <HStack alignItems="center">

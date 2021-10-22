@@ -16,15 +16,18 @@ const RecipieStack = () => {
   const route = useRoute<RouteProp<RecipieParamList, "RecipeStack">>();
 
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        headerTintColor: "#fff",
+        headerStyle: {
+          backgroundColor: "#009367",
+        },
+      }}
+    >
       <Stack.Screen
         options={({ route }): any => {
           return {
             title: "Recipes",
-            headerShown: Platform.OS === "ios" ? true : false,
-            headerTitleStyle: {
-              color: Platform.OS === "ios" ? "#0369a1" : null,
-            },
           };
         }}
         name="RecipeStack"
@@ -34,9 +37,7 @@ const RecipieStack = () => {
         options={({ route }): any => {
           return {
             title: route.params.recipe.title,
-            headerShown: true,
             headerTitleStyle: {
-              color: "#0369a1",
               fontFamily: "open-sans",
             },
           };

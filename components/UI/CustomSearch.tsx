@@ -10,17 +10,18 @@ import CustomText from "../UI/CustomText";
 interface Props {
   handleQuery: (recipe: string) => void;
   selectedFilters: {}[];
+  placeholder: string;
 }
-const RecipeSearch: React.FC<Props> = ({ handleQuery, selectedFilters }) => {
-  const [recipe, setRecipe] = useState<string>("");
+const CustomSearch: React.FC<Props> = (props) => {
+  const [search, setSearch] = useState<string>("");
 
-  const handleRecipe = (value: string) => {
-    setRecipe(value);
+  const handleSerach = (value: string) => {
+    setSearch(value);
   };
   const dispatch = useAppDipsatch();
   const handleSubmit = () => {
-    handleQuery(recipe);
-    setRecipe("");
+    props.handleQuery(search);
+    setSearch("");
   };
   const navigation =
     useNavigation<NativeStackNavigationProp<RecipieParamList, "RecipeStack">>();
@@ -36,8 +37,8 @@ const RecipeSearch: React.FC<Props> = ({ handleQuery, selectedFilters }) => {
       >
         <Input
           onSubmitEditing={handleSubmit}
-          value={recipe}
-          onChangeText={handleRecipe}
+          value={search}
+          onChangeText={handleSerach}
           w="80%"
           InputLeftElement={
             <Icon
@@ -48,19 +49,21 @@ const RecipeSearch: React.FC<Props> = ({ handleQuery, selectedFilters }) => {
             />
           }
           InputRightElement={
-            !selectedFilters.length ? (
+            !props.selectedFilters.length ? (
               <Box></Box>
             ) : (
               <Badge borderRadius="50" colorScheme="warning">
-                <CustomText color="white">{selectedFilters?.length}</CustomText>
+                <CustomText color="white">
+                  {props.selectedFilters?.length}
+                </CustomText>
               </Badge>
             )
           }
-          placeholder="Search for a recipe"
+          placeholder={props.placeholder}
         />
       </View>
     </View>
   );
 };
 
-export default RecipeSearch;
+export default CustomSearch;

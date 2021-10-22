@@ -1,8 +1,8 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { DiaryParamList } from "../../routs/NavigationTypes";
-import { Heading, ScrollView, Text, View } from "native-base";
+import { Heading, ScrollView, View } from "native-base";
 import React, { useEffect, useState } from "react";
-import { Platform, TouchableOpacity } from "react-native";
+import { TouchableOpacity } from "react-native";
 import MealsCard from "../../components/Diary/MealsCard";
 import {
   getPageCalories,
@@ -13,6 +13,8 @@ import {
 import { useAppDipsatch, useAppSelector } from "../../redux/hooks";
 import { mealCreator } from "../../helpers/helpers";
 import Loading from "../../components/Utils/Loading";
+import CustomText from "../../components/UI/CustomText";
+import CustomHeader from "../../components/UI/CustomHeader";
 
 const HomeScreen = ({
   navigation,
@@ -53,42 +55,6 @@ const HomeScreen = ({
   }
 
   useEffect(() => {
-    navigation.setOptions({
-      headerTitle: () =>
-        isLoading ? (
-          <Text>
-            <Loading />
-          </Text>
-        ) : Platform.OS === "ios" ? (
-          <Text p="2" fontSize="xl">
-            Page: {pageNumber.toString()}
-          </Text>
-        ) : (
-          <Text p="3" fontSize="xl">
-            Page: {pageNumber.toString()}
-          </Text>
-        ),
-
-      headerRight: () => (
-        <TouchableOpacity onPress={handleNewPage}>
-          <Text>
-            {pageNumber === pages.length - 1 ? "New Page" : "Next Page"}
-          </Text>
-        </TouchableOpacity>
-      ),
-      headerLeft: () =>
-        prevPage === 0 ? null : (
-          <TouchableOpacity
-            onPress={() => {
-              setPrevPage(prevPage - 1);
-            }}
-          >
-            <Text>Prev Page</Text>
-          </TouchableOpacity>
-        ),
-    });
-  }, [prevPage, pages]);
-  useEffect(() => {
     dispatch(getMealCalories(pageNumber.toString()));
     dispatch(getPageCalories(pageNumber.toString()));
   }, [dispatch, prevPage, pages]);
@@ -99,8 +65,30 @@ const HomeScreen = ({
     setPrevPage(pages.length - 1);
   }, [pages.length]);
   if (isLoading) return <Loading />;
+
   return (
     <ScrollView contentContainerStyle={{ alignItems: "center" }}>
+      <CustomHeader>
+        {prevPage === 0 ? null : (
+          <TouchableOpacity
+            onPress={() => {
+              setPrevPage(prevPage - 1);
+            }}
+          >
+            <CustomText>Prev Page</CustomText>
+          </TouchableOpacity>
+        )}
+
+        <CustomText alignSelf="center" size={"19"}>
+          Page: {pageNumber}
+        </CustomText>
+
+        <TouchableOpacity onPress={handleNewPage}>
+          <CustomText>
+            {pageNumber === pages.length - 1 ? "New Page" : "Next Page"}
+          </CustomText>
+        </TouchableOpacity>
+      </CustomHeader>
       <Heading color="warmGray.700" p="7">
         Daily Calories: {pages[pageNumber]?.totalcal}
       </Heading>

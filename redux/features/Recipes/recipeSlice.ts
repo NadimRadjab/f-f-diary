@@ -16,7 +16,7 @@ export const getRecipes = createAsyncThunk(
     const response: ApiResponse<RecipesData> = await axios.get(
       `https://api.spoonacular.com/recipes/complexSearch?query=${
         items.recipe
-      }&diet=${items.selected
+      }&number=10&diet=${items.selected
         .join("&")
         .toLowerCase()}&addRecipeNutrition=true&fillIngredients=true&addRecipeInformation=true&apiKey=${SPOO_API_KEY}`
     );

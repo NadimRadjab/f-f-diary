@@ -7,24 +7,17 @@ import WeaklyPlansStack from "./WeaklyPlansStacks/WeaklyPlansStack";
 import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Platform } from "react-native";
 
-const Tab: any =
-  Platform.OS === "ios"
-    ? createBottomTabNavigator()
-    : createMaterialBottomTabNavigator();
+const Tab: any = createMaterialBottomTabNavigator();
 const BottomNavigation = () => {
   return (
-    <Tab.Navigator
-      activeColor="#f5f5f5"
-      inactiveColor="#404040"
-      shifting
-      barStyle={{ backgroundColor: "#0369a1" }}
-    >
+    <Tab.Navigator initialParams activeColor="#f5f5f5" shifting>
       <Tab.Screen
         options={{
           headerShown: true,
           headerTitleStyle: {
             color: "#0369a1",
           },
+          tabBarColor: "#0369a1",
           tabBarIcon: ({ color }: any) => (
             <MaterialIcons color={color} size={25} name="book" />
           ),
@@ -36,6 +29,7 @@ const BottomNavigation = () => {
         options={{
           headerShown: false,
           title: "Recipes",
+          tabBarColor: "#009367",
           tabBarIcon: ({ color }: any) => (
             <MaterialCommunityIcons color={color} size={25} name="chef-hat" />
           ),
@@ -46,7 +40,16 @@ const BottomNavigation = () => {
       <Tab.Screen
         options={{
           headerShown: false,
+
           title: "Weakly Plans",
+          tabBarColor: "#009387",
+          tabBarIcon: () => (
+            <MaterialCommunityIcons
+              name="calendar-weekend"
+              size={24}
+              color="#fff"
+            />
+          ),
         }}
         name="WeaklyPlans"
         component={WeaklyPlansStack}
