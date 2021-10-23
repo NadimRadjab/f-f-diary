@@ -4,6 +4,7 @@ export type DrawerParamList = {
   Home: {
     drawerTitle: string;
   };
+  test: undefined;
 };
 export type DiaryParamList = {
   DiaryStack: undefined;
@@ -41,4 +42,8 @@ export type RecipieParamList = {
 export type WeaklyParamList = {
   weaklyPlansSearch: undefined;
   weeklyplan: undefined;
+};
+export type AuthParamList = {
+  Login: undefined;
+  Register: undefined;
 };

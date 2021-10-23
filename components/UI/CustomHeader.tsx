@@ -1,6 +1,5 @@
 import { View } from "native-base";
 import React from "react";
-import CustomText from "./CustomText";
 
 const CustomHeader = (props: any) => {
   return (
@@ -9,10 +8,9 @@ const CustomHeader = (props: any) => {
       justifyContent="space-between"
       flexDirection="row"
       alignItems="center"
-      p="4"
+      p="3"
       bg="#fff"
-      shadow="3"
-      borderBottomWidth="0.2"
+      shadow="4"
       height="60"
     >
       {props.children}

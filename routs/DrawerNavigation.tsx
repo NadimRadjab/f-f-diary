@@ -4,13 +4,13 @@ import BottomNavigation from "./BottomNavigation";
 import { Platform } from "react-native";
 import { DrawerParamList } from "./NavigationTypes";
 import { Ionicons } from "@expo/vector-icons";
+import AuthStack from "./AuthStacks/AuthStack";
 
 const Stack = createDrawerNavigator<DrawerParamList>();
 const DrawerNavigation = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        // headerShown: Platform.OS === "android" && true,
         headerShown: false,
         drawerStyle: {},
 
@@ -33,6 +33,17 @@ const DrawerNavigation = () => {
         })}
         name="Home"
         component={BottomNavigation}
+      />
+      <Stack.Screen
+        options={({ route }) => ({
+          title: "Test",
+
+          drawerIcon: () => (
+            <Ionicons color="#c2410c" size={23} name="bonfire" />
+          ),
+        })}
+        name="test"
+        component={AuthStack}
       />
     </Stack.Navigator>
   );

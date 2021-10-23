@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { SPOO_API_KEY } from "@env";
 import axios from "axios";
-import { PlanMeal } from "./types";
+import { PlanMeal, PlanNutrients } from "./types";
 interface ApiResponse<T> {
   errorMessage?: string;
   responseCode?: string;
@@ -16,6 +16,7 @@ interface RecipesState {
   plans: {
     day: string;
     meals: PlanMeal[];
+    nutrients: PlanNutrients;
   }[];
 }
 export const getPlan = createAsyncThunk(
@@ -32,7 +33,11 @@ export const getPlan = createAsyncThunk(
       newObj[key]["day"] = key;
     }
 
-    const newArr: { day: string; meals: PlanMeal[] }[] = Object.values(newObj);
+    const newArr: {
+      day: string;
+      meals: PlanMeal[];
+      nutrients: PlanNutrients;
+    }[] = Object.values(newObj);
     return newArr;
   }
 );
@@ -53,7 +58,7 @@ const weeklyPlanSlice = createSlice({
       })
       .addCase(getPlan.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.plans.push(...action.payload);
+        state.plans = action.payload;
       });
   },
 });

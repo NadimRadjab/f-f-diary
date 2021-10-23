@@ -1,21 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { ScrollView, View } from "native-base";
+import { Button, ScrollView, View, Text } from "native-base";
 import { Animated } from "react-native";
 import Filters from "../../components/Recipe/Filters";
 import CustomSearch from "../../components/UI/CustomSearch";
-import { useAppDipsatch } from "../../redux/hooks";
+import { useAppDipsatch, useAppSelector } from "../../redux/hooks";
 import { WeaklyParamList } from "../../routs/NavigationTypes";
 import filtersData from "../../seeds/filtersData";
 import { getPlan } from "../../redux/features/WeeklyPlans/weeklyPlansSlice";
 
-import CustomText from "../../components/UI/CustomText";
-import { justifyContent } from "styled-system";
-
 const PlansSearchScreen = () => {
   const [filters, setFilters] = useState(filtersData);
   const [selected, setSelected] = useState<any>([]);
+
+  const plan = useAppSelector((state) => state.plans.plans);
 
   const dispatch = useAppDipsatch();
 
@@ -40,7 +39,8 @@ const PlansSearchScreen = () => {
       NativeStackNavigationProp<WeaklyParamList, "weaklyPlansSearch">
     >();
 
-  const handleQuery = (calories: string) => {
+  const handleQuery = (calories: string): void => {
+    if (!calories) return;
     dispatch(getPlan({ selected, calories }));
     navigation.navigate("weeklyplan");
   };
@@ -56,37 +56,61 @@ const PlansSearchScreen = () => {
   return (
     <View
       style={{
-        height: "100%",
-        flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
+        height: "100%",
       }}
     >
       <View
-        // flexDirection="row"
-        style={{
-          justifyContent: "center",
-          alignItems: "center",
-        }}
+        p="2"
+        w="100%"
+        h="200"
+        justifyContent="center"
+        alignItems="center"
+        shadow="4"
+        bg="#fff"
       >
+        <View
+          h="30"
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <ScrollView showsHorizontalScrollIndicator={false} horizontal={true}>
+            {filters.map((filter, i) => {
+              return (
+                <Filters
+                  key={i}
+                  color={!filter.isSelected ? filter.color : "warmGray.400"}
+                  id={filter.id}
+                  handleFilters={handleFilters}
+                  title={filter.title}
+                />
+              );
+            })}
+          </ScrollView>
+        </View>
+
         <CustomSearch
+          isSearching={false}
           handleQuery={handleQuery}
           selectedFilters={selected}
-          placeholder={"Set calories..."}
+          placeholder={"Set daily calories..."}
         />
-        <View h="150" justifyContent="space-between">
-          {filters.map((filter, i) => {
-            return (
-              <Filters
-                key={i}
-                color={!filter.isSelected ? filter.color : "warmGray.400"}
-                id={filter.id}
-                handleFilters={handleFilters}
-                title={filter.title}
-              />
-            );
-          })}
-        </View>
+        {plan.length ? (
+          <Button
+            onPress={() => {
+              navigation.navigate("weeklyplan");
+            }}
+            colorScheme="success"
+            m="1"
+          >
+            GO TO MEAL PLAN
+          </Button>
+        ) : (
+          <Text></Text>
+        )}
       </View>
     </View>
   );
