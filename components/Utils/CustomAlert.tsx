@@ -11,19 +11,19 @@ import {
 } from "native-base";
 interface Props {
   text: string;
-  title: string;
-  isOpen: boolean;
+  title?: string;
+  isOpen?: boolean;
 }
 const CustomAlert: React.FC<Props> = (props) => {
   const [show, setShow] = React.useState(props.isOpen);
   if (!show) return null;
   return (
-    <Box h="60" w="75%">
+    <Box>
       <Collapse isOpen={show}>
-        <Alert w="100%" status="error">
-          <VStack space={1} w="100%">
+        <Alert flexWrap="wrap" w="100%" status="error">
+          <VStack flexWrap="wrap" space={1} w="100%">
             <HStack alignItems="center" justifyContent="space-between">
-              <HStack space={2} alignItems="center">
+              <HStack flexWrap="wrap" space={2} alignItems="center">
                 <Alert.Icon />
                 <Text
                   fontSize="md"
@@ -35,11 +35,6 @@ const CustomAlert: React.FC<Props> = (props) => {
                   {props.text}
                 </Text>
               </HStack>
-              <IconButton
-                variant="unstyled"
-                icon={<CloseIcon size="3" color="coolGray.600" />}
-                onPress={() => setShow(false)}
-              />
             </HStack>
           </VStack>
         </Alert>

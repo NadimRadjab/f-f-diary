@@ -4,6 +4,7 @@ import foodSlice from "./features/Diary/foodSlice";
 import recipeSlice from "./features/Recipes/recipeSlice";
 import weeklyPlansSlice from "./features/WeeklyPlans/weeklyPlansSlice";
 import authSlice from "./features/Auth/authSlice";
+import profileSlice from "./features/Profile/profileSlice";
 export const store = configureStore({
   reducer: {
     diary: diarySlice,
@@ -11,6 +12,7 @@ export const store = configureStore({
     recipes: recipeSlice,
     plans: weeklyPlansSlice,
     auth: authSlice,
+    profile: profileSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

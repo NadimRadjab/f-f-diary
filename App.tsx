@@ -13,6 +13,8 @@ const fetchFonts = () => {
 };
 export default function App() {
   const [data, setData] = useState<boolean>(false);
+  // const user = store.getState((state)=>state.auth.isLoading)
+
   if (!data) {
     return (
       <AppLoading

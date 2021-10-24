@@ -4,8 +4,13 @@ import { Formik } from "formik";
 import { MaterialIcons } from "@expo/vector-icons";
 import { globalStyles } from "../../styles/global";
 import * as yup from "yup";
-import { useAppDipsatch } from "../../redux/hooks";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { AuthParamList } from "../../routs/NavigationTypes";
+import { useAppDipsatch, useAppSelector } from "../../redux/hooks";
 import { register } from "../../redux/features/Auth/authSlice";
+import CustomAlert from "../../components/Utils/CustomAlert";
+import Loading from "../../components/Utils/Loading";
 
 const RegisterSchema = yup.object({
   email: yup
@@ -23,6 +28,11 @@ const RegisterSchema = yup.object({
 });
 const RegisterScreen = () => {
   const dispatch = useAppDipsatch();
+
+  const auth = useAppSelector((state) => state.auth);
+
+  const navigation =
+    useNavigation<NativeStackNavigationProp<AuthParamList, "Login">>();
   return (
     <View flex="1" justifyContent="center" alignItems="center">
       <Formik
@@ -39,17 +49,22 @@ const RegisterScreen = () => {
           );
         }}
       >
-        {(props) => (
+        {(props: any) => (
           <View
             w="95%"
             justifyContent="center"
             alignItems="center"
-            h="350"
+            borderRadius="10"
             bg="#fff"
             shadow="4"
             p="2"
           >
-            <View m="1">
+            {auth.error && !auth.token ? (
+              <View w="90%" justifyContent="center" alignItems="center" mb="5">
+                <CustomAlert isOpen={true} text={auth.error} />
+              </View>
+            ) : null}
+            <View p="1" m="1">
               <Input
                 onBlur={props.handleBlur("email")}
                 w={{
@@ -68,11 +83,11 @@ const RegisterScreen = () => {
                 onChangeText={props.handleChange("email")}
                 value={props.values.email}
               />
-              {props.touched.email && (
+              {props.touched.email && props.errors.email && (
                 <Text style={globalStyles.errorText}>{props.errors.email}</Text>
               )}
             </View>
-            <View m="1">
+            <View p="1" m="1">
               <Input
                 onBlur={props.handleBlur("password")}
                 type="password"
@@ -92,13 +107,13 @@ const RegisterScreen = () => {
                 value={props.values.password}
                 onChangeText={props.handleChange("password")}
               />
-              {props.touched.password && (
+              {props.touched.password && props.errors.password && (
                 <Text style={globalStyles.errorText}>
                   {props.errors.password}
                 </Text>
               )}
             </View>
-            <View m="1">
+            <View p="1" m="1">
               <Input
                 onBlur={props.handleBlur("confirmPassword")}
                 type="password"
@@ -118,14 +133,19 @@ const RegisterScreen = () => {
                 value={props.values.confirmPassword}
                 onChangeText={props.handleChange("confirmPassword")}
               />
-              {props.touched.confirmPassword && (
-                <Text style={globalStyles.errorText}>
-                  {props.errors.confirmPassword}
-                </Text>
-              )}
+              {props.touched.confirmPassword &&
+                props.errors.confirmPassword && (
+                  <Text style={globalStyles.errorText}>
+                    {props.errors.confirmPassword}
+                  </Text>
+                )}
             </View>
-            <View w="40%">
-              <Button onPress={props.handleSubmit}>REGISTER</Button>
+            <View w="40%" h="60">
+              {auth.isLoading ? (
+                <Loading />
+              ) : (
+                <Button onPress={props.handleSubmit}>REGISTER</Button>
+              )}
             </View>
           </View>
         )}

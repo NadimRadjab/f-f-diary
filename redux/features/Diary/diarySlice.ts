@@ -5,8 +5,9 @@ import { Meal, DiaryState, Food, Page } from "./types";
 
 export const getOwnerDiary = createAsyncThunk(
   "diary/getOwnerDiary",
-  async (ownerId: string) => {
+  async (ownerId: undefined | null | string) => {
     let ownersIds = [] as any;
+
     let ownerDiary = {
       id: "",
       date: "",
@@ -15,7 +16,6 @@ export const getOwnerDiary = createAsyncThunk(
       meals: [] as any,
     };
     const diary = await firestore.collection("diaries").get();
-
     const data = diary.docs.forEach((doc) =>
       ownersIds.push(doc.data().ownerId)
     );
@@ -34,13 +34,13 @@ export const getOwnerDiary = createAsyncThunk(
       let arr = [] as any;
       mealCreator(arr, "0");
       const res = await firestore.collection("diaries").add({
-        ownerId: "u1",
+        ownerId,
         date: new Date().toISOString(),
         pages: [
           {
             id: "0",
             date: new Date().toISOString(),
-            ownerId: "1",
+            ownerId: ownerId,
             meals: [],
           },
         ],
@@ -171,7 +171,7 @@ export const deleteFood = createAsyncThunk(
 );
 
 const initialState: DiaryState = {
-  ownerId: "u1",
+  ownerId: "",
   id: "",
   pages: [],
   isLoading: false,

@@ -1,17 +1,38 @@
 import React from "react";
-import { createDrawerNavigator } from "@react-navigation/drawer";
+import {
+  createDrawerNavigator,
+  DrawerContentComponentProps,
+  DrawerContentScrollView,
+  DrawerItem,
+  DrawerItemList,
+} from "@react-navigation/drawer";
 import BottomNavigation from "./BottomNavigation";
-import { Platform } from "react-native";
 import { DrawerParamList } from "./NavigationTypes";
 import { Ionicons } from "@expo/vector-icons";
 import AuthStack from "./AuthStacks/AuthStack";
+import { useAppDipsatch } from "../redux/hooks";
+import { logOut } from "../redux/features/Auth/authSlice";
+import ProfileBottomBar from "./Profile/ProfileBottomBar";
 
 const Stack = createDrawerNavigator<DrawerParamList>();
+const SignOut = (props: DrawerContentComponentProps) => {
+  const dispatch = useAppDipsatch();
+  const handleLogOut = () => {
+    dispatch(logOut());
+  };
+  return (
+    <DrawerContentScrollView>
+      <DrawerItemList {...props} />
+      <DrawerItem label="Log Out" onPress={handleLogOut} />
+    </DrawerContentScrollView>
+  );
+};
 const DrawerNavigation = () => {
   return (
     <Stack.Navigator
+      drawerContent={(props) => <SignOut {...props} />}
       screenOptions={{
-        headerShown: false,
+        headerShown: true,
         drawerStyle: {},
 
         headerTintColor: "#f5f5f5",
@@ -36,14 +57,14 @@ const DrawerNavigation = () => {
       />
       <Stack.Screen
         options={({ route }) => ({
-          title: "Test",
+          title: "Profile",
 
           drawerIcon: () => (
             <Ionicons color="#c2410c" size={23} name="bonfire" />
           ),
         })}
-        name="test"
-        component={AuthStack}
+        name="Profile"
+        component={ProfileBottomBar}
       />
     </Stack.Navigator>
   );

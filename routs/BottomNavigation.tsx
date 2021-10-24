@@ -5,7 +5,6 @@ import DiaryStack from "./DiaryStacks/DiaryStack";
 import RecipieStack from "./RecipesStacks/RecipieStack";
 import WeaklyPlansStack from "./WeaklyPlansStacks/WeaklyPlansStack";
 import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { Platform } from "react-native";
 
 const Tab: any = createMaterialBottomTabNavigator();
 const BottomNavigation = () => {

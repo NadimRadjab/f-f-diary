@@ -67,7 +67,6 @@ const RecipeScreen = () => {
           transform: [{ translateY: headerY }],
         }}
       >
-        {/* <RecipeSearch selectedFilters={selected} handleQuery={handleQuery} /> */}
         <CustomSearch
           isSearching
           placeholder={"Search for a recipe..."}

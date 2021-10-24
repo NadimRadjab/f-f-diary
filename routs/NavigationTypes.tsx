@@ -4,6 +4,7 @@ export type DrawerParamList = {
   Home: {
     drawerTitle: string;
   };
+  Profile: undefined;
   test: undefined;
 };
 export type DiaryParamList = {

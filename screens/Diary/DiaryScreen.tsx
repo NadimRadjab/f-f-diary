@@ -24,6 +24,7 @@ const HomeScreen = ({
   const pages = useAppSelector((state) => state.diary.pages);
   const diaryId = useAppSelector((state) => state.diary.id);
   const isLoading = useAppSelector((state) => state.diary.isLoading);
+  const userId = useAppSelector((state) => state.auth.userId);
   const dispatch = useAppDipsatch();
   const [prevPage, setPrevPage] = useState<number>(
     pages.length ? pages.length - 1 : 0
@@ -59,7 +60,7 @@ const HomeScreen = ({
     dispatch(getPageCalories(pageNumber.toString()));
   }, [dispatch, prevPage, pages]);
   useEffect(() => {
-    dispatch(getOwnerDiary("u1"));
+    dispatch(getOwnerDiary(userId));
   }, [dispatch]);
   useEffect(() => {
     setPrevPage(pages.length - 1);
