@@ -1,3 +1,7 @@
 export type ProfileBottomParamList = {
-  goals: undefined;
+  Goals: undefined;
+};
+export type GoalsParamList = {
+  Progress: undefined;
+  Calculator: undefined;
 };

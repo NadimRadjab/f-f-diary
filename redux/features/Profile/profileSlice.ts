@@ -65,13 +65,19 @@ export const getUserProfile = createAsyncThunk(
 );
 export const setCurrentWeight = createAsyncThunk(
   "userProfile/setCurrentWeight",
-  async (items: { weight: string; profileId: string | undefined }) => {
+  async (items: {
+    isCurrentWeight: boolean;
+    weight: string;
+    profileId: string | undefined;
+  }) => {
     try {
-      const data = await firestore
-        .collection("profiles")
-        .doc(items.profileId)
-        .update({ "progressData.currentWeight": items.weight });
-      return items.weight;
+      const data = await firestore.collection("profiles").doc(items.profileId);
+      if (items.isCurrentWeight) {
+        await data.update({ "progressData.currentWeight": items.weight });
+      } else {
+        await data.update({ "progressData.goalWeight": items.weight });
+      }
+      return { ...items };
     } catch (err) {
       console.log(err);
     }
@@ -113,7 +119,11 @@ const profileSlice = createSlice({
       })
       .addCase(setCurrentWeight.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.progressData!.currentWeight = action.payload;
+        if (action.payload!.isCurrentWeight) {
+          state.progressData!.currentWeight = action.payload?.weight;
+        } else {
+          state.progressData!.goalWeight = action.payload?.weight;
+        }
       });
   },
 });

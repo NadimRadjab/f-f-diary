@@ -2,9 +2,10 @@ import React, { useEffect } from "react";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { ProfileBottomParamList } from "./types";
-import ProgressScreen from "../../screens/Profile/ProgressScreen";
+import GoalsScreen from "../../screens/Profile/GoalsScreen";
 import { useAppDipsatch, useAppSelector } from "../../redux/hooks";
 import { getUserProfile } from "../../redux/features/Profile/profileSlice";
+import GolasStack from "./GolasStack";
 
 const Tab = createMaterialBottomTabNavigator<ProfileBottomParamList>();
 
@@ -27,8 +28,8 @@ const ProfileBottomBar = () => {
             <MaterialIcons color={color} size={25} name="pie-chart" />
           ),
         })}
-        name="goals"
-        component={ProgressScreen}
+        name="Goals"
+        component={GolasStack}
       />
     </Tab.Navigator>
   );
