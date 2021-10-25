@@ -4,6 +4,7 @@ import GoalsScreen from "../../screens/Profile/GoalsScreen";
 import CalculatorScreen from "../../screens/Profile/CalculatorScreen";
 import { GoalsParamList } from "./types";
 import { colors } from "../../styles/colors";
+import CaloriesSreen from "../../screens/Profile/Goals/CaloriesSreen";
 
 const Stack = createNativeStackNavigator<GoalsParamList>();
 const GolasStack = () => {
@@ -29,6 +30,13 @@ const GolasStack = () => {
         })}
         name="Calculator"
         component={CalculatorScreen}
+      />
+      <Stack.Screen
+        options={({ route }) => ({
+          title: "Results",
+        })}
+        name="Calories"
+        component={CaloriesSreen}
       />
     </Stack.Navigator>
   );

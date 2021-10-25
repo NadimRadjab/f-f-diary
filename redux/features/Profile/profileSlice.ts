@@ -67,16 +67,26 @@ export const setCurrentWeight = createAsyncThunk(
   "userProfile/setCurrentWeight",
   async (items: {
     isCurrentWeight: boolean;
+    isStartingWeight: boolean;
+    date?: Date;
     weight: string;
     profileId: string | undefined;
   }) => {
     try {
       const data = await firestore.collection("profiles").doc(items.profileId);
-      if (items.isCurrentWeight) {
+      if (items.isCurrentWeight && !items.isStartingWeight) {
         await data.update({ "progressData.currentWeight": items.weight });
+      } else if (items.isCurrentWeight && items.isStartingWeight) {
+        await data.update({
+          "progressData.startingWeight": {
+            weight: items.weight,
+            date: items.date,
+          },
+        });
       } else {
         await data.update({ "progressData.goalWeight": items.weight });
       }
+
       return { ...items };
     } catch (err) {
       console.log(err);
@@ -119,8 +129,17 @@ const profileSlice = createSlice({
       })
       .addCase(setCurrentWeight.fulfilled, (state, action) => {
         state.isLoading = false;
-        if (action.payload!.isCurrentWeight) {
+        if (
+          action.payload!.isCurrentWeight &&
+          !action.payload!.isStartingWeight
+        ) {
           state.progressData!.currentWeight = action.payload?.weight;
+        } else if (
+          action.payload?.isCurrentWeight &&
+          action.payload.isStartingWeight
+        ) {
+          state.progressData!.startingWeight!.date = action.payload.date;
+          state.progressData!.startingWeight!.weight = action.payload.weight;
         } else {
           state.progressData!.goalWeight = action.payload?.weight;
         }

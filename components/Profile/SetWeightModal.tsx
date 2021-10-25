@@ -1,21 +1,35 @@
 import React, { useState } from "react";
-import { Button, Modal, FormControl, Input } from "native-base";
+import { Button, Modal, FormControl, Input, View } from "native-base";
+import DatePicker from "./Goals/DatePicker";
+import { set } from "react-native-reanimated";
 const SetWeightModal = (props: {
   isOpen: boolean;
   handleClose: () => void;
   isCurrentWeight: boolean;
-  handleSubmit: (weight: string) => void;
+  isStartingWeight: boolean;
+
+  handleSubmit: (weight: string, date: Date | undefined) => void;
 }) => {
   const [weight, setWeight] = useState("");
+  const [startingDate, setStartingDate] = useState<Date>();
+  let whichWeight;
+  if (props.isCurrentWeight && !props.isStartingWeight) {
+    whichWeight = "Set Current Weight";
+  } else if (props.isCurrentWeight && props.isStartingWeight) {
+    whichWeight = "Set Starting Weight";
+  } else {
+    whichWeight = " Goal weight";
+  }
+  const handleDate = (date: Date) => {
+    setStartingDate(date);
+  };
 
   return (
     <>
       <Modal isOpen={props.isOpen} onClose={() => props.handleClose()}>
         <Modal.Content maxWidth="400px">
           <Modal.CloseButton />
-          <Modal.Header>
-            {props.isCurrentWeight ? "Set Current Weight" : "Set Goal Weight"}
-          </Modal.Header>
+          <Modal.Header>{whichWeight}</Modal.Header>
           <Modal.Body>
             <FormControl>
               <FormControl.Label>Weight(kg)</FormControl.Label>
@@ -23,11 +37,14 @@ const SetWeightModal = (props: {
                 onChangeText={setWeight}
                 keyboardType="numeric"
                 value={weight}
-                placeholder={
-                  props.isCurrentWeight ? "Current weight..." : "Goal weight..."
-                }
+                placeholder={"Weight"}
               />
             </FormControl>
+            {props.isStartingWeight && props.isCurrentWeight && (
+              <View w="100%" p="2" m="2">
+                <DatePicker handleDate={handleDate} />
+              </View>
+            )}
           </Modal.Body>
           <Modal.Footer>
             <Button.Group space={2}>
@@ -42,7 +59,8 @@ const SetWeightModal = (props: {
               </Button>
               <Button
                 onPress={() => {
-                  props.handleSubmit(weight);
+                  props.handleSubmit(weight, startingDate);
+
                   props.handleClose();
                 }}
               >

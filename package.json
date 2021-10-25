@@ -36,6 +36,7 @@
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
+    "react-native-chart-kit": "^6.11.0",
     "react-native-dotenv": "^3.2.0",
     "react-native-gesture-handler": "~1.10.2",
     "react-native-pager-view": "5.0.12",
@@ -54,7 +55,8 @@
     "styled-components": "^5.3.1",
     "styled-system": "^5.1.5",
     "uuidv4": "^6.2.12",
-    "yup": "^0.32.11"
+    "yup": "^0.32.11",
+    "@react-native-community/datetimepicker": "3.5.2"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",
