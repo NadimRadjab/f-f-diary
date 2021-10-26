@@ -1,23 +1,31 @@
 import React from "react";
-import {
-  createNativeStackNavigator,
-  NativeStackNavigationProp,
-} from "@react-navigation/native-stack";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import RecipeScreen from "../../screens/Recipe/RecipeScreen";
 import { Platform } from "react-native";
 import { DrawerParamList, RecipieParamList } from "../NavigationTypes";
-import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import RecipeDetailsScreen from "../../screens/Recipe/RecipeDetailsScreen";
-
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { useNavigation } from "@react-navigation/native";
+import { DrawerNavigationProp } from "@react-navigation/drawer";
+import { Ionicons } from "@expo/vector-icons";
 const Stack = createNativeStackNavigator<RecipieParamList>();
 const RecipieStack = () => {
   const navigation =
-    useNavigation<NativeStackNavigationProp<DrawerParamList, "Home">>();
-  const route = useRoute<RouteProp<RecipieParamList, "RecipeStack">>();
+    useNavigation<DrawerNavigationProp<DrawerParamList, "Home">>();
 
   return (
     <Stack.Navigator
       screenOptions={{
+        headerLeft: () => (
+          <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
+            <Ionicons
+              style={{ marginRight: 20 }}
+              color="white"
+              size={25}
+              name={Platform.OS === "ios" ? "ios-menu" : "md-menu"}
+            />
+          </TouchableOpacity>
+        ),
         headerTintColor: "#fff",
         headerStyle: {
           backgroundColor: "#009367",

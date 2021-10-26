@@ -32,7 +32,7 @@ const DrawerNavigation = () => {
     <Stack.Navigator
       drawerContent={(props) => <SignOut {...props} />}
       screenOptions={{
-        headerShown: true,
+        headerShown: false,
         drawerStyle: {},
 
         headerTintColor: "#f5f5f5",

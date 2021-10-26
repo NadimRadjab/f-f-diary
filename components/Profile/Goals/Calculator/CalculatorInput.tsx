@@ -15,6 +15,7 @@ const CalculatorInput = (props: any) => {
         value={props.values}
         onChangeText={props.handleChange}
         variant="rounded"
+        contextMenuHidden={true}
         placeholder={props.placeholder}
       />
       {props.error && (

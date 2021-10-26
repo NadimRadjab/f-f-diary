@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { ProfileBottomParamList } from "./types";
-import GoalsScreen from "../../screens/Profile/GoalsScreen";
 import { useAppDipsatch, useAppSelector } from "../../redux/hooks";
 import { getUserProfile } from "../../redux/features/Profile/profileSlice";
 import GolasStack from "./GolasStack";

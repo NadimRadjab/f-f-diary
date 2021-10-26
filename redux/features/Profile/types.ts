@@ -1,9 +1,12 @@
 export type ProgressData = {
-  calories?: string;
-  currentWeight?: string;
+  currentCalories?: string | number;
+  currentWeight?: {
+    weight?: string | number;
+    date?: Date;
+  }[];
   goalWeight?: string;
-  startingWeight?: {
+  startingWeight: {
     weight: string;
-    date?: Date | undefined | string | number;
+    date: Date | undefined | string | number;
   };
 };

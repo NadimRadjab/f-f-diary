@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button, Modal, FormControl, Input, View } from "native-base";
 import DatePicker from "./Goals/DatePicker";
 import { set } from "react-native-reanimated";
+import { Alert } from "react-native";
 const SetWeightModal = (props: {
   isOpen: boolean;
   handleClose: () => void;
@@ -10,7 +11,7 @@ const SetWeightModal = (props: {
 
   handleSubmit: (weight: string, date: Date | undefined) => void;
 }) => {
-  const [weight, setWeight] = useState("");
+  const [weight, setWeight] = useState<string>("");
   const [startingDate, setStartingDate] = useState<Date>();
   let whichWeight;
   if (props.isCurrentWeight && !props.isStartingWeight) {
@@ -23,6 +24,19 @@ const SetWeightModal = (props: {
   const handleDate = (date: Date) => {
     setStartingDate(date);
   };
+  const handleWeights = () => {
+    if (!startingDate && props.isStartingWeight) {
+      return Alert.alert("Pick a date", "You must select a starting date", [
+        { text: "Ok" },
+      ]);
+    } else if (!weight.length) {
+      return Alert.alert("Select Weight", "Weight cannot be empty.", [
+        { text: "Ok" },
+      ]);
+    }
+    props.handleSubmit(weight, startingDate);
+    props.handleClose();
+  };
 
   return (
     <>
@@ -34,6 +48,7 @@ const SetWeightModal = (props: {
             <FormControl>
               <FormControl.Label>Weight(kg)</FormControl.Label>
               <Input
+                contextMenuHidden={true}
                 onChangeText={setWeight}
                 keyboardType="numeric"
                 value={weight}
@@ -57,15 +72,7 @@ const SetWeightModal = (props: {
               >
                 Cancel
               </Button>
-              <Button
-                onPress={() => {
-                  props.handleSubmit(weight, startingDate);
-
-                  props.handleClose();
-                }}
-              >
-                Save
-              </Button>
+              <Button onPress={handleWeights}>Save</Button>
             </Button.Group>
           </Modal.Footer>
         </Modal.Content>

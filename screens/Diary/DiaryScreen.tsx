@@ -15,6 +15,7 @@ import { mealCreator } from "../../helpers/helpers";
 import Loading from "../../components/Utils/Loading";
 import CustomText from "../../components/UI/CustomText";
 import CustomHeader from "../../components/UI/CustomHeader";
+import { getUserProfile } from "../../redux/features/Profile/profileSlice";
 
 const HomeScreen = ({
   navigation,
@@ -25,6 +26,7 @@ const HomeScreen = ({
   const diaryId = useAppSelector((state) => state.diary.id);
   const isLoading = useAppSelector((state) => state.diary.isLoading);
   const userId = useAppSelector((state) => state.auth.userId);
+  const profile = useAppSelector((state) => state.profile);
   const dispatch = useAppDipsatch();
   const [prevPage, setPrevPage] = useState<number>(
     pages.length ? pages.length - 1 : 0
@@ -63,6 +65,9 @@ const HomeScreen = ({
     dispatch(getOwnerDiary(userId));
   }, [dispatch]);
   useEffect(() => {
+    dispatch(getUserProfile(userId));
+  }, [dispatch]);
+  useEffect(() => {
     setPrevPage(pages.length - 1);
   }, [pages.length]);
   if (isLoading) return <Loading />;
@@ -91,7 +96,13 @@ const HomeScreen = ({
         </TouchableOpacity>
       </CustomHeader>
       <Heading color="warmGray.700" p="7">
-        Daily Calories: {pages[pageNumber]?.totalcal}
+        Daily Calories Left: {""}
+        {!profile.progressData.currentCalories
+          ? "0"
+          : `${
+              (profile.progressData?.currentCalories as any) -
+              pages[pageNumber]?.totalcal
+            } `}
       </Heading>
       <View style={{ alignItems: "center" }} marginTop="15" w="100%">
         {!pages.length

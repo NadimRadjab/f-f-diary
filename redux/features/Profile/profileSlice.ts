@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { firestore } from "../../../firebase";
 import { ProgressData } from "./types";
+import { setCurrentCalories } from "./thunks";
 interface ProfileState {
   isLoading: boolean;
   profileId: string | undefined;
@@ -9,7 +10,7 @@ interface ProfileState {
   favorites?: { recipes?: {}[]; plans?: {}[] };
   personalData?: {};
   items?: { meals?: {}[]; recipes?: {}[] };
-  progressData?: ProgressData;
+  progressData: ProgressData;
 }
 
 export const getUserProfile = createAsyncThunk(
@@ -22,7 +23,13 @@ export const getUserProfile = createAsyncThunk(
       favorites: {},
       personalData: {},
       items: {},
-      progressData: {},
+      progressData: {
+        startingWeight: {
+          weight: "",
+          date: "",
+        },
+        currentWeight: [],
+      },
     };
 
     const usersIds = [] as any;
@@ -54,7 +61,7 @@ export const getUserProfile = createAsyncThunk(
           newProfile.favorites = doc.data()?.favorites;
           newProfile.personalData = doc.data()?.personalData;
           newProfile.items = doc.data()?.items;
-          newProfile.progressData = doc.data()?.progressData;
+          newProfile.progressData = doc.data()!.progressData;
         });
       }
       return newProfile;
@@ -74,8 +81,14 @@ export const setCurrentWeight = createAsyncThunk(
   }) => {
     try {
       const data = await firestore.collection("profiles").doc(items.profileId);
+      let newObj = {
+        weight: items.weight,
+        date: new Date(),
+      };
       if (items.isCurrentWeight && !items.isStartingWeight) {
-        await data.update({ "progressData.currentWeight": items.weight });
+        const info = await data.get();
+        let weightArr = [...info.data()!.progressData.currentWeight, newObj];
+        await data.update({ "progressData.currentWeight": weightArr });
       } else if (items.isCurrentWeight && items.isStartingWeight) {
         await data.update({
           "progressData.startingWeight": {
@@ -86,8 +99,7 @@ export const setCurrentWeight = createAsyncThunk(
       } else {
         await data.update({ "progressData.goalWeight": items.weight });
       }
-
-      return { ...items };
+      return { ...items, newObj };
     } catch (err) {
       console.log(err);
     }
@@ -102,7 +114,12 @@ const initialState: ProfileState = {
   favorites: {},
   personalData: {},
   items: {},
-  progressData: {},
+  progressData: {
+    startingWeight: {
+      weight: "",
+      date: "",
+    },
+  },
 };
 
 const profileSlice = createSlice({
@@ -122,7 +139,7 @@ const profileSlice = createSlice({
         state.personalData = action.payload?.personalData;
         state.userId = action.payload?.userId;
         state.date = action.payload?.date;
-        state.progressData = action.payload?.progressData;
+        state.progressData = action.payload!.progressData;
       })
       .addCase(setCurrentWeight.pending, (state) => {
         state.isLoading = true;
@@ -133,16 +150,24 @@ const profileSlice = createSlice({
           action.payload!.isCurrentWeight &&
           !action.payload!.isStartingWeight
         ) {
-          state.progressData!.currentWeight = action.payload?.weight;
+          state.progressData!.currentWeight!.push(action.payload!.newObj);
         } else if (
           action.payload?.isCurrentWeight &&
-          action.payload.isStartingWeight
+          action.payload!.isStartingWeight
         ) {
-          state.progressData!.startingWeight!.date = action.payload.date;
-          state.progressData!.startingWeight!.weight = action.payload.weight;
+          state.progressData.startingWeight!.date =
+            action.payload.date?.toISOString();
+          state.progressData.startingWeight!.weight = action.payload.weight;
         } else {
           state.progressData!.goalWeight = action.payload?.weight;
         }
+      })
+      .addCase(setCurrentCalories.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(setCurrentCalories.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.progressData!.currentCalories = action.payload;
       });
   },
 });

@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { Button, StyleSheet, TouchableOpacity } from "react-native";
 import ResultCard from "../../../components/Profile/Goals/Results/ResultCard";
 import CustomText from "../../../components/UI/CustomText";
+import { setCurrentCalories } from "../../../redux/features/Profile/thunks";
+import { useAppDipsatch, useAppSelector } from "../../../redux/hooks";
 import { GoalsParamList } from "../../../routs/Profile/types";
 import { colors } from "../../../styles/colors";
 type Props = NativeStackScreenProps<GoalsParamList, "Calories">;
@@ -11,7 +13,13 @@ type Props = NativeStackScreenProps<GoalsParamList, "Calories">;
 const CaloriesSreen = ({ navigation, route }: Props) => {
   const { results } = route.params;
   const [calories, setCalories] = useState<number | string>(results.calories);
+  const profileId = useAppSelector((state) => state.profile.profileId);
 
+  const dispatch = useAppDipsatch();
+  const handleSubmit = () => {
+    dispatch(setCurrentCalories({ profileId, calories }));
+    navigation.navigate("Progress");
+  };
   return (
     <View flex="1" alignItems="center">
       <View
@@ -98,7 +106,7 @@ const CaloriesSreen = ({ navigation, route }: Props) => {
         </ResultCard>
       </View>
       <View p="2" w="35%" m="2">
-        <Button color={colors.primaryBlue} title="Set" />
+        <Button onPress={handleSubmit} color={colors.primaryBlue} title="Set" />
       </View>
     </View>
   );

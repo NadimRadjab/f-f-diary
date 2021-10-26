@@ -9,7 +9,7 @@ import Loading from "../../components/Utils/Loading";
 import { colors } from "../../styles/colors";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { GoalsParamList } from "../../routs/Profile/types";
-import { LineChart } from "react-native-chart-kit";
+import Chart from "../../components/Profile/Goals/Chart";
 type Props = NativeStackScreenProps<GoalsParamList, "Progress">;
 const GoalsScreen = ({ navigation }: Props) => {
   const [openModel, setOpenModel] = useState(false);
@@ -32,7 +32,6 @@ const GoalsScreen = ({ navigation }: Props) => {
       })
     );
   };
-  const date = profile.progressData?.startingWeight?.date?.seconds;
 
   if (profile.isLoading) return <Loading />;
   return (
@@ -55,11 +54,9 @@ const GoalsScreen = ({ navigation }: Props) => {
         >
           <Text p="2">Set Starting Weight</Text>
           <Text p="5">
-            {!profile.progressData?.currentWeight
-              ? "0"
-              : `${
-                  profile.progressData.startingWeight?.weight
-                } kg ${new Date().toISOString(date)}`}
+            {!profile.progressData?.startingWeight.weight.length
+              ? "0kg"
+              : `${profile.progressData.startingWeight?.weight} kg `}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -72,9 +69,9 @@ const GoalsScreen = ({ navigation }: Props) => {
         >
           <Text p="2">Set Current Weight</Text>
           <Text p="5">
-            {!profile.progressData?.currentWeight
+            {!profile.progressData?.currentWeight?.length
               ? "0"
-              : profile.progressData.currentWeight}
+              : profile.progressData.currentWeight.slice(-1).pop()?.weight}
             kg
           </Text>
         </TouchableOpacity>
@@ -100,47 +97,32 @@ const GoalsScreen = ({ navigation }: Props) => {
             color={colors.primaryBlue}
           />
         </View>
-        <View alignItems="center" p="2">
-          <Text fontSize={17}>Current Calories</Text>
-          <Text fontSize={16}>0</Text>
+        <View
+          flexDirection="row"
+          justifyContent="space-between"
+          alignItems="center"
+          w="100%"
+          p="2"
+        >
+          <View p="2" alignItems="center">
+            <Text fontSize={17}>Current Calories</Text>
+            <Text fontSize={16}>{profile.progressData?.currentCalories}</Text>
+          </View>
+          <View p="2" alignItems="center">
+            <Text fontSize={17}> Goal Weight</Text>
+            <Text fontSize={16}>
+              {profile.progressData?.goalWeight &&
+                `${profile.progressData?.goalWeight} kg`}
+            </Text>
+          </View>
         </View>
       </View>
       <View p="2" m="3" alignItems="center">
-        <LineChart
-          data={{
-            labels: ["January", "May", "September", "December"],
-            datasets: [
-              {
-                data: [77],
-              },
-            ],
-          }}
-          width={400}
-          height={220}
-          yAxisSuffix="kg"
-          yAxisInterval={1}
-          chartConfig={{
-            backgroundColor: "#e26a00",
-            backgroundGradientFrom: colors.primaryBlue,
-            backgroundGradientTo: colors.primaryTeal,
-            decimalPlaces: 2, // optional, defaults to 2dp
-            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-            labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-            style: {
-              borderRadius: 16,
-            },
-            propsForDots: {
-              r: "7",
-              strokeWidth: "2",
-              stroke: "#ffa726",
-            },
-          }}
-          bezier
-          style={{
-            marginVertical: 8,
-            borderRadius: 16,
-          }}
-        />
+        {profile.isLoading ? (
+          <Loading />
+        ) : (
+          <Chart currentWeightData={profile.progressData.currentWeight} />
+        )}
       </View>
     </ScrollView>
   );
