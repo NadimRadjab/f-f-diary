@@ -14,15 +14,20 @@ import { Recipe } from "../../redux/features/Recipes/type";
 interface Props {
   recipe: Recipe;
   handleLocation: (recipe: Recipe) => void;
+  isInFavorites: boolean;
 }
-const RecipeCard: React.FC<Props> = ({ recipe, handleLocation }) => {
+const RecipeCard: React.FC<Props> = ({
+  isInFavorites,
+  recipe,
+  handleLocation,
+}) => {
   const handleNavigation = () => {
     handleLocation(recipe);
   };
 
   return (
     <Box
-      margin="100"
+      margin={!isInFavorites ? "100" : "4"}
       rounded="lg"
       width="350"
       height="500"

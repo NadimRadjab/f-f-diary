@@ -1,19 +1,54 @@
 import { View, ScrollView, IconButton, Icon, Text } from "native-base";
 import React, { useEffect, useState } from "react";
 import CustomHeader from "../../components/UI/CustomHeader";
-import CustomText from "../../components/UI/CustomText";
-import { useAppSelector } from "../../redux/hooks";
 import Loading from "../../components/Utils/Loading";
 import CustomCard from "../../components/UI/CustomCard";
+import CustomText from "../../components/UI/CustomText";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useAppDipsatch, useAppSelector } from "../../redux/hooks";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import { WeeklyParamList } from "../../routs/NavigationTypes";
+import { togglePlanInFavorites } from "../../redux/features/Profile/thunks";
+import { FavoritesParamList } from "../../routs/Profile/types";
+import { Snackbar } from "react-native-paper";
 
 const WeeklyPlanScreen = () => {
-  const weeklyPlan = useAppSelector((state) => state.plans.plans);
-  const isLoading = useAppSelector((state) => state.plans.isLoading);
+  const route = useRoute<RouteProp<FavoritesParamList, "PlanDetails">>();
+  const weeklyPlan = !route.params
+    ? useAppSelector((state) => state.plans.plans)
+    : route.params.plan;
+  const generalPlan = !route.params
+    ? useAppSelector((state) => state.plans)
+    : route.params.planParams;
+  const profile = useAppSelector((state) => state.profile);
   const [prevDay, setPrevDay] = useState<number>(0);
-
+  const [isItemInFavorites, setIsItemInFavorites] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [snackBarText, setSnackBarText] = useState(
+    "Plan was added to favorites."
+  );
+  const navigation =
+    useNavigation<NativeStackNavigationProp<WeeklyParamList, "weeklyplan">>();
   const lastDay = weeklyPlan[prevDay];
 
+  const dispatch = useAppDipsatch();
+
+  const handleSubmit = () => {
+    dispatch(
+      togglePlanInFavorites({
+        isItemInFavorites,
+        plan: { id: generalPlan.id, plan: weeklyPlan, date: generalPlan.date },
+        profileId: profile.profileId,
+      })
+    );
+
+    setVisible(true);
+    if (!isItemInFavorites) {
+      setSnackBarText("Plan was added to favorites.");
+    } else setSnackBarText("Plan was removed from favorites.");
+  };
   const handleNewPage = () => {
     if (prevDay === weeklyPlan.length - 1) return;
     setPrevDay(prevDay + 1);
@@ -25,6 +60,30 @@ const WeeklyPlanScreen = () => {
   } else {
     dayNumber = prevDay;
   }
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity onPress={handleSubmit}>
+          {profile.isLoading ? (
+            <Loading />
+          ) : (
+            <Ionicons
+              name={!isItemInFavorites ? "star-outline" : "star"}
+              color="white"
+              size={23}
+            />
+          )}
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation, profile, handleSubmit]);
+
+  useEffect(() => {
+    const isPlan = profile.favorites.plans.some(
+      (plan) => plan?.id === generalPlan.id
+    );
+    setIsItemInFavorites(isPlan);
+  }, [handleSubmit]);
   const nutrientsTable = () => {
     return Object.keys(weeklyPlan[dayNumber].nutrients).map((nutr) => (
       <View
@@ -47,9 +106,18 @@ const WeeklyPlanScreen = () => {
       </View>
     ));
   };
-  if (isLoading) return <Loading />;
+
+  if (!route.params ? generalPlan.isLoading : null) return <Loading />;
   return (
     <View>
+      <Snackbar
+        style={{ backgroundColor: "#2C2F33" }}
+        visible={visible}
+        duration={1000}
+        onDismiss={() => setVisible(false)}
+      >
+        {snackBarText}
+      </Snackbar>
       <ScrollView
         contentContainerStyle={{
           alignItems: "center",

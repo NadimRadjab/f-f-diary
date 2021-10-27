@@ -1,13 +1,22 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { firestore } from "../../../firebase";
 import { ProgressData } from "./types";
-import { setCurrentCalories } from "./thunks";
+import {
+  toggleRecipeInFavorites,
+  setCurrentCalories,
+  togglePlanInFavorites,
+} from "./thunks";
+import { Recipe } from "../Recipes/type";
+import { WeeklyPlan } from "../WeeklyPlans/types";
 interface ProfileState {
   isLoading: boolean;
   profileId: string | undefined;
   userId?: string | null;
   date?: string;
-  favorites?: { recipes?: {}[]; plans?: {}[] };
+  favorites: {
+    recipes: Recipe[];
+    plans: { date: Date; id: string; plan: WeeklyPlan[] }[];
+  };
   personalData?: {};
   items?: { meals?: {}[]; recipes?: {}[] };
   progressData: ProgressData;
@@ -20,7 +29,10 @@ export const getUserProfile = createAsyncThunk(
       date: new Date().toISOString(),
       profileId: "",
       userId,
-      favorites: {},
+      favorites: {
+        recipes: [],
+        plans: [],
+      },
       personalData: {},
       items: {},
       progressData: {
@@ -111,7 +123,10 @@ const initialState: ProfileState = {
   profileId: "",
   date: "",
   userId: "",
-  favorites: {},
+  favorites: {
+    recipes: [],
+    plans: [],
+  },
   personalData: {},
   items: {},
   progressData: {
@@ -134,7 +149,7 @@ const profileSlice = createSlice({
       .addCase(getUserProfile.fulfilled, (state, action) => {
         state.isLoading = false;
         state.profileId = action.payload?.profileId;
-        state.favorites = action.payload?.favorites;
+        state.favorites = action.payload!.favorites;
         state.items = action.payload?.items;
         state.personalData = action.payload?.personalData;
         state.userId = action.payload?.userId;
@@ -168,6 +183,34 @@ const profileSlice = createSlice({
       .addCase(setCurrentCalories.fulfilled, (state, action) => {
         state.isLoading = false;
         state.progressData!.currentCalories = action.payload;
+      })
+      .addCase(toggleRecipeInFavorites.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(toggleRecipeInFavorites.fulfilled, (state, action: any) => {
+        state.isLoading = false;
+
+        if (!action.payload.isRecipe) {
+          state.favorites.recipes.push(action.payload.recipe);
+        } else {
+          state.favorites.recipes = state.favorites.recipes.filter(
+            (recipe) => recipe.id !== action.payload.id
+          );
+        }
+      })
+      .addCase(togglePlanInFavorites.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(togglePlanInFavorites.fulfilled, (state, action: any) => {
+        state.isLoading = false;
+
+        if (!action.payload.isPlan) {
+          state.favorites.plans.push(action.payload.plan);
+        } else {
+          state.favorites.plans = state.favorites.plans.filter(
+            (plan) => plan.id !== action.payload.id
+          );
+        }
       });
   },
 });

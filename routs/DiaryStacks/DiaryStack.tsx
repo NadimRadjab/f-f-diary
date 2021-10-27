@@ -18,16 +18,6 @@ const DiaryStack = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerLeft: () => (
-          <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
-            <Ionicons
-              style={{ marginRight: 20 }}
-              color="white"
-              size={25}
-              name={Platform.OS === "ios" ? "ios-menu" : "md-menu"}
-            />
-          </TouchableOpacity>
-        ),
         headerStyle: {
           backgroundColor: "#0369a1",
         },
@@ -37,6 +27,16 @@ const DiaryStack = () => {
       <Stack.Screen
         options={({ route }) => ({
           title: "Diary",
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
+              <Ionicons
+                style={{ marginRight: 20 }}
+                color="white"
+                size={25}
+                name={Platform.OS === "ios" ? "ios-menu" : "md-menu"}
+              />
+            </TouchableOpacity>
+          ),
         })}
         name="DiaryStack"
         component={Diary}

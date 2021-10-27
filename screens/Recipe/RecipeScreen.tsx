@@ -114,7 +114,11 @@ const RecipeScreen = () => {
           keyExtractor={(item) => item.id.toString()}
           renderItem={(item) => {
             return (
-              <RecipeCard handleLocation={handleLocation} recipe={item.item} />
+              <RecipeCard
+                isInFavorites={false}
+                handleLocation={handleLocation}
+                recipe={item.item}
+              />
             );
           }}
         />

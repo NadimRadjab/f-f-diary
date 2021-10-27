@@ -6,7 +6,7 @@ import { Animated } from "react-native";
 import Filters from "../../components/Recipe/Filters";
 import CustomSearch from "../../components/UI/CustomSearch";
 import { useAppDipsatch, useAppSelector } from "../../redux/hooks";
-import { WeaklyParamList } from "../../routs/NavigationTypes";
+import { WeeklyParamList } from "../../routs/NavigationTypes";
 import filtersData from "../../seeds/filtersData";
 import { getPlan } from "../../redux/features/WeeklyPlans/weeklyPlansSlice";
 
@@ -36,7 +36,7 @@ const PlansSearchScreen = () => {
   };
   const navigation =
     useNavigation<
-      NativeStackNavigationProp<WeaklyParamList, "weaklyPlansSearch">
+      NativeStackNavigationProp<WeeklyParamList, "weaklyPlansSearch">
     >();
 
   const handleQuery = (calories: string): void => {

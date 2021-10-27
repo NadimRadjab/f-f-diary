@@ -24,4 +24,20 @@ export const globalStyles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: "white",
   },
+  touchableCard: {
+    width: "100%",
+    padding: 2,
+    margin: 2,
+    justifyContent: "space-between",
+
+    alignItems: "center",
+    flexDirection: "row",
+    shadowColor: "black",
+    shadowOpacity: 0.26,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 7,
+    borderRadius: 10,
+    backgroundColor: "white",
+  },
 });

@@ -4,7 +4,9 @@ import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { ProfileBottomParamList } from "./types";
 import { useAppDipsatch, useAppSelector } from "../../redux/hooks";
 import { getUserProfile } from "../../redux/features/Profile/profileSlice";
-import GolasStack from "./GolasStack";
+import GolasStack from "./Goals/GolasStack";
+import FavoritesStack from "./Favorites/FavoritesStack";
+import { colors } from "../../styles/colors";
 
 const Tab = createMaterialBottomTabNavigator<ProfileBottomParamList>();
 
@@ -15,7 +17,7 @@ const ProfileBottomBar = () => {
     dispatch(getUserProfile(userId));
   }, [dispatch]);
   return (
-    <Tab.Navigator activeColor="#f5f5f5">
+    <Tab.Navigator shifting activeColor="#f5f5f5">
       <Tab.Screen
         options={({}) => ({
           title: "Goals",
@@ -29,6 +31,24 @@ const ProfileBottomBar = () => {
         })}
         name="Goals"
         component={GolasStack}
+      />
+      <Tab.Screen
+        options={({}) => ({
+          title: "Favorites",
+          headerTitleStyle: {
+            color: "#0369a1",
+          },
+          tabBarColor: colors.primaryPurple,
+          tabBarIcon: ({ color }: any) => (
+            <MaterialCommunityIcons
+              color={color}
+              size={25}
+              name="star-box-multiple"
+            />
+          ),
+        })}
+        name="Favorites"
+        component={FavoritesStack}
       />
     </Tab.Navigator>
   );

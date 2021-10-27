@@ -1,3 +1,10 @@
+export type WeeklyPlan = {
+  day: string;
+  id?: string;
+  date?: string | Date;
+  meals: PlanMeal[];
+  nutrients: PlanNutrients;
+};
 export type PlanMeal = {
   id: string;
   title: string;

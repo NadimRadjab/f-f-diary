@@ -16,16 +16,6 @@ const RecipieStack = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerLeft: () => (
-          <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
-            <Ionicons
-              style={{ marginRight: 20 }}
-              color="white"
-              size={25}
-              name={Platform.OS === "ios" ? "ios-menu" : "md-menu"}
-            />
-          </TouchableOpacity>
-        ),
         headerTintColor: "#fff",
         headerStyle: {
           backgroundColor: "#009367",
@@ -36,6 +26,16 @@ const RecipieStack = () => {
         options={({ route }): any => {
           return {
             title: "Recipes",
+            headerLeft: () => (
+              <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
+                <Ionicons
+                  style={{ marginRight: 20 }}
+                  color="white"
+                  size={25}
+                  name={Platform.OS === "ios" ? "ios-menu" : "md-menu"}
+                />
+              </TouchableOpacity>
+            ),
           };
         }}
         name="RecipeStack"

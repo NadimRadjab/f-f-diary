@@ -1,15 +1,19 @@
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
-import PlansSearchScreen from "../../screens/WeaklyPlans/PlansSearchScreen";
-import { DrawerParamList, WeeklyParamList } from "../NavigationTypes";
-import WeeklyPlanScreen from "../../screens/WeaklyPlans/WeeklyPlanScreen";
+import { FavoritesParamList } from "../types";
+import { colors } from "../../../styles/colors";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { Ionicons } from "@expo/vector-icons";
 import { Platform } from "react-native";
-const Stack = createNativeStackNavigator<WeeklyParamList>();
-const WeaklyPlansStack = () => {
+import { DrawerParamList } from "../../NavigationTypes";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import FavoritesTopBar from "./FavoritesTopNavigation";
+import RecipeDetailsScreen from "../../../screens/Recipe/RecipeDetailsScreen";
+import WeeklyPlanScreen from "../../../screens/WeaklyPlans/WeeklyPlanScreen";
+const Stack = createNativeStackNavigator<FavoritesParamList>();
+
+const FavoritesStack = () => {
   const navigation =
     useNavigation<DrawerNavigationProp<DrawerParamList, "Home">>();
   return (
@@ -17,13 +21,13 @@ const WeaklyPlansStack = () => {
       screenOptions={{
         headerTintColor: "#fff",
         headerStyle: {
-          backgroundColor: "#009387",
+          backgroundColor: colors.primaryPurple,
         },
       }}
     >
       <Stack.Screen
-        options={({ route }) => ({
-          title: "Weekly Plans",
+        options={{
+          title: "Favorites",
           headerLeft: () => (
             <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
               <Ionicons
@@ -34,19 +38,25 @@ const WeaklyPlansStack = () => {
               />
             </TouchableOpacity>
           ),
-        })}
-        name="weaklyPlansSearch"
-        component={PlansSearchScreen}
+        }}
+        name="FavoritesItems"
+        component={FavoritesTopBar}
       />
       <Stack.Screen
         options={({ route }) => ({
-          title: "Weekly Plans",
+          title: route.params.recipe.title,
         })}
-        name="weeklyplan"
+        name="RecipeDetails"
+        component={RecipeDetailsScreen}
+      />
+      <Stack.Screen
+        options={({ route }) => ({
+          title: "Weekly Plan",
+        })}
+        name="PlanDetails"
         component={WeeklyPlanScreen}
       />
     </Stack.Navigator>
   );
 };
-
-export default WeaklyPlansStack;
+export default FavoritesStack;
