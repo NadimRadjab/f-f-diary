@@ -4,6 +4,7 @@ import { WeeklyPlan } from "../../redux/features/WeeklyPlans/types";
 export type ProfileBottomParamList = {
   Goals: undefined;
   Favorites: undefined;
+  ProfileSettings: undefined;
 };
 export type GoalsParamList = {
   Progress: undefined;
@@ -37,4 +38,7 @@ export type FavoritesParamList = {
 export type FavoritesTopParamList = {
   Recipes: undefined;
   Plans: undefined;
+};
+export type ProfileStackParamList = {
+  ProfileGeneral: undefined;
 };

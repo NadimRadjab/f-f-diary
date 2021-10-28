@@ -1,6 +1,7 @@
 import React from "react";
 import { Input, FormControl, WarningOutlineIcon } from "native-base";
 const CalculatorInput = (props: any) => {
+  console.log(props.isTouched);
   return (
     <FormControl
       alignItems="center"

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Button, Modal, FormControl, Input, View } from "native-base";
 import DatePicker from "./Goals/DatePicker";
-import { set } from "react-native-reanimated";
 import { Alert } from "react-native";
 const SetWeightModal = (props: {
   isOpen: boolean;

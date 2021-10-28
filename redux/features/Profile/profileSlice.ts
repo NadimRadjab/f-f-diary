@@ -1,13 +1,17 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { firestore } from "../../../firebase";
-import { ProgressData } from "./types";
+import { PersonalData, ProgressData } from "./types";
 import {
   toggleRecipeInFavorites,
   setCurrentCalories,
   togglePlanInFavorites,
+  changeName,
+  changeNumber,
+  changePassoword,
 } from "./thunks";
 import { Recipe } from "../Recipes/type";
 import { WeeklyPlan } from "../WeeklyPlans/types";
+import { profileData } from "../../../seeds/profileData";
 interface ProfileState {
   isLoading: boolean;
   profileId: string | undefined;
@@ -17,7 +21,7 @@ interface ProfileState {
     recipes: Recipe[];
     plans: { date: Date; id: string; plan: WeeklyPlan[] }[];
   };
-  personalData?: {};
+  personalData: PersonalData;
   items?: { meals?: {}[]; recipes?: {}[] };
   progressData: ProgressData;
 }
@@ -26,22 +30,8 @@ export const getUserProfile = createAsyncThunk(
   "userProfile/getUserProfile",
   async (userId: string | undefined | null) => {
     let newProfile = {
-      date: new Date().toISOString(),
-      profileId: "",
+      ...profileData,
       userId,
-      favorites: {
-        recipes: [],
-        plans: [],
-      },
-      personalData: {},
-      items: {},
-      progressData: {
-        startingWeight: {
-          weight: "",
-          date: "",
-        },
-        currentWeight: [],
-      },
     };
 
     const usersIds = [] as any;
@@ -127,7 +117,12 @@ const initialState: ProfileState = {
     recipes: [],
     plans: [],
   },
-  personalData: {},
+  personalData: {
+    message: "",
+    name: "",
+    number: "",
+    email: "",
+  },
   items: {},
   progressData: {
     startingWeight: {
@@ -140,7 +135,11 @@ const initialState: ProfileState = {
 const profileSlice = createSlice({
   name: "userProfile",
   initialState,
-  reducers: {},
+  reducers: {
+    clearErrorMessage: (state) => {
+      state.personalData.message = "";
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getUserProfile.pending, (state) => {
@@ -151,7 +150,7 @@ const profileSlice = createSlice({
         state.profileId = action.payload?.profileId;
         state.favorites = action.payload!.favorites;
         state.items = action.payload?.items;
-        state.personalData = action.payload?.personalData;
+        state.personalData = action.payload!.personalData;
         state.userId = action.payload?.userId;
         state.date = action.payload?.date;
         state.progressData = action.payload!.progressData;
@@ -211,7 +210,30 @@ const profileSlice = createSlice({
             (plan) => plan.id !== action.payload.id
           );
         }
+      })
+      .addCase(changeName.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(changeName.fulfilled, (state, action: any) => {
+        state.isLoading = false;
+        state.personalData.name = action.payload;
+      })
+      .addCase(changeNumber.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(changeNumber.fulfilled, (state, action: any) => {
+        state.isLoading = false;
+        state.personalData.number = action.payload;
+      })
+      .addCase(changePassoword.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(changePassoword.fulfilled, (state, action: any) => {
+        state.isLoading = false;
+
+        state.personalData.message = action.payload;
       });
   },
 });
+export const { clearErrorMessage } = profileSlice.actions;
 export default profileSlice.reducer;

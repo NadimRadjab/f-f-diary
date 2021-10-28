@@ -55,6 +55,7 @@ const Calculator = () => {
               placeholder={"Choose gender"}
               width={"50%"}
               error={gender}
+              isTouched={props.touched.gender}
               errorMessage={props.errors.gender}
               values={props.values.gender}
               handleChange={props.handleChange("gender")}
@@ -68,6 +69,7 @@ const Calculator = () => {
               title={"Age"}
               placeholder={"Age"}
               error={age}
+              isTouched={props.touched.age}
               errorMessage={props.errors.age}
               values={props.values.age}
               handleChange={props.handleChange("age")}
@@ -78,6 +80,7 @@ const Calculator = () => {
               placeholder={"Weight"}
               error={weight}
               errorMessage={props.errors.weight}
+              isTouched={props.touched.weight}
               values={props.values.weight}
               handleChange={props.handleChange("weight")}
               handleBlur={props.handleBlur("weight")}
@@ -86,6 +89,7 @@ const Calculator = () => {
               title={"Height"}
               placeholder={"Height"}
               error={height}
+              isTouched={props.touched.height}
               errorMessage={props.errors.height}
               values={props.values.height}
               handleChange={props.handleChange("height")}
@@ -97,6 +101,7 @@ const Calculator = () => {
               placeholder={"Choose activity level."}
               error={activity}
               errorMessage={props.errors.activity}
+              isTouched={props.touched.activity}
               values={props.values.activity}
               handleChange={props.handleChange("activity")}
               handleBlur={props.handleBlur("activity")}

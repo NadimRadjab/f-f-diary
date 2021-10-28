@@ -10,3 +10,9 @@ export type ProgressData = {
     date: Date | undefined | string | number;
   };
 };
+export type PersonalData = {
+  name: string;
+  number: string;
+  message: string;
+  email: string;
+};

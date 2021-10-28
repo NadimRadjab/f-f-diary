@@ -7,6 +7,7 @@ import { getUserProfile } from "../../redux/features/Profile/profileSlice";
 import GolasStack from "./Goals/GolasStack";
 import FavoritesStack from "./Favorites/FavoritesStack";
 import { colors } from "../../styles/colors";
+import ProfileStack from "./ProfileSettings/ProfileStack";
 
 const Tab = createMaterialBottomTabNavigator<ProfileBottomParamList>();
 
@@ -49,6 +50,20 @@ const ProfileBottomBar = () => {
         })}
         name="Favorites"
         component={FavoritesStack}
+      />
+      <Tab.Screen
+        options={({}) => ({
+          title: "Profile",
+          headerTitleStyle: {
+            color: "#0369a1",
+          },
+          tabBarColor: colors.primaryRed,
+          tabBarIcon: ({ color }: any) => (
+            <MaterialIcons color={color} size={25} name="person" />
+          ),
+        })}
+        name="ProfileSettings"
+        component={ProfileStack}
       />
     </Tab.Navigator>
   );
