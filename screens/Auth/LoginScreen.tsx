@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, Input, Icon, Button, Text } from "native-base";
 import { Formik } from "formik";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -11,6 +11,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { AuthParamList } from "../../routs/NavigationTypes";
 import Loading from "../../components/Utils/Loading";
 import CustomAlert from "../../components/Utils/CustomAlert";
+import { colors } from "../../styles/colors";
 
 const LoginSchema = yup.object({
   email: yup
@@ -29,7 +30,12 @@ const LoginScreen = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<AuthParamList, "Login">>();
   return (
-    <View flex="1" justifyContent="center" alignItems="center">
+    <View
+      bg="warmGray.100"
+      flex="1"
+      justifyContent="center"
+      alignItems="center"
+    >
       <Formik
         initialValues={{
           email: "",
@@ -100,7 +106,7 @@ const LoginScreen = () => {
                 value={props.values.password}
                 onChangeText={props.handleChange("password")}
               />
-              {props.touched.email && props.errors.password ? (
+              {props.touched.password && props.errors.password ? (
                 <Text style={globalStyles.errorText}>
                   {props.errors.password}
                 </Text>
@@ -114,7 +120,7 @@ const LoginScreen = () => {
             ) : (
               <View justifyContent="center" m="1" flexDirection="row" w="60%">
                 <Button colorScheme="info" mr="2" onPress={props.handleSubmit}>
-                  LOG IN
+                  Sign In
                 </Button>
                 <Button onPress={() => navigation.navigate("Register")}>
                   Sign Up

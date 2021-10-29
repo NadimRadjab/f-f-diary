@@ -15,7 +15,7 @@ import { mealCreator } from "../../helpers/helpers";
 import Loading from "../../components/Utils/Loading";
 import CustomText from "../../components/UI/CustomText";
 import CustomHeader from "../../components/UI/CustomHeader";
-import { getUserProfile } from "../../redux/features/Profile/profileSlice";
+import { getUserProfile } from "../../redux/features/Profile/thunks";
 
 const HomeScreen = ({
   navigation,

@@ -1,7 +1,7 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import GoalsScreen from "../../../screens/Profile/GoalsScreen";
-import CalculatorScreen from "../../../screens/Profile/CalculatorScreen";
+import GoalsScreen from "../../../screens/Profile/Goals/GoalsScreen";
+import CalculatorScreen from "../../../screens/Profile/Goals/CalculatorScreen";
 import { GoalsParamList } from "../types";
 import { colors } from "../../../styles/colors";
 import CaloriesSreen from "../../../screens/Profile/Goals/CaloriesSreen";

@@ -5,6 +5,7 @@ import { useAppDipsatch, useAppSelector } from "../redux/hooks";
 import { getCurrentUser } from "../redux/features/Auth/authSlice";
 import firebase from "firebase";
 import AuthStack from "./AuthStacks/AuthStack";
+import LoadingScreen from "../screens/Auth/LoadingScreen";
 interface RouteProps {}
 const MyThema = {
   ...DefaultTheme,
@@ -21,7 +22,7 @@ const MyThema = {
 const Routs: React.FC<RouteProps> = ({}) => {
   const dispatch = useAppDipsatch();
   const userId = useAppSelector((state) => state.auth.userId);
-
+  const user = useAppSelector((state) => state.auth);
   useEffect(() => {
     (async () => {
       await firebase.auth().onAuthStateChanged((user) => {
@@ -38,7 +39,9 @@ const Routs: React.FC<RouteProps> = ({}) => {
 
   return (
     <NavigationContainer theme={MyThema}>
-      {!userId ? <AuthStack /> : <DrawerNavigation />}
+      {!userId && user.isLoading && <LoadingScreen />}
+      {userId && <DrawerNavigation />}
+      {!userId && !user.isLoading && <AuthStack />}
     </NavigationContainer>
   );
 };

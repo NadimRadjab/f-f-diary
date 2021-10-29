@@ -12,7 +12,8 @@ export type ProgressData = {
 };
 export type PersonalData = {
   name: string;
+  image: string;
   number: string;
   message: string;
-  email: string;
+  email: string | null;
 };

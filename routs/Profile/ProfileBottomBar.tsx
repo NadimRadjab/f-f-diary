@@ -3,7 +3,7 @@ import { createMaterialBottomTabNavigator } from "@react-navigation/material-bot
 import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { ProfileBottomParamList } from "./types";
 import { useAppDipsatch, useAppSelector } from "../../redux/hooks";
-import { getUserProfile } from "../../redux/features/Profile/profileSlice";
+import { getUserProfile } from "../../redux/features/Profile/thunks";
 import GolasStack from "./Goals/GolasStack";
 import FavoritesStack from "./Favorites/FavoritesStack";
 import { colors } from "../../styles/colors";

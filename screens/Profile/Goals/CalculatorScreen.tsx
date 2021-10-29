@@ -3,11 +3,11 @@ import { Formik } from "formik";
 import { View, Select, ScrollView } from "native-base";
 import * as Yup from "yup";
 import { Button } from "react-native";
-import { colors } from "../../styles/colors";
-import CalculatorInput from "../../components/Profile/Goals/Calculator/CalculatorInput";
-import CalculatorSelect from "../../components/Profile/Goals/Calculator/CalculatorSelect";
+import { colors } from "../../../styles/colors";
+import CalculatorInput from "../../../components/Profile/Goals/Calculator/CalculatorInput";
+import CalculatorSelect from "../../../components/Profile/Goals/Calculator/CalculatorSelect";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { GoalsParamList } from "../../routs/Profile/types";
+import { GoalsParamList } from "../../../routs/Profile/types";
 const CalculatorSchema = Yup.object({
   age: Yup.number().required("Age is required").min(1).max(100),
   weight: Yup.number().required("Weight is required").min(1).max(200),
@@ -45,8 +45,7 @@ const CalculatorScreen = ({ navigation }: Props) => {
         }}
       >
         {(props) => {
-          const { age, gender, activity, height, weight } =
-            props.touched && props.errors;
+          const { age, gender, activity, height, weight } = props.errors;
 
           return (
             <ScrollView
@@ -60,6 +59,7 @@ const CalculatorScreen = ({ navigation }: Props) => {
                 placeholder={"Choose gender"}
                 width={"50%"}
                 error={gender}
+                isTouched={props.touched.gender}
                 errorMessage={props.errors.gender}
                 values={props.values.gender}
                 handleChange={props.handleChange("gender")}
@@ -73,6 +73,7 @@ const CalculatorScreen = ({ navigation }: Props) => {
                 title={"Age"}
                 placeholder={"Age"}
                 error={age}
+                isTouched={props.touched.age}
                 errorMessage={props.errors.age}
                 values={props.values.age}
                 handleChange={props.handleChange("age")}
@@ -82,6 +83,7 @@ const CalculatorScreen = ({ navigation }: Props) => {
                 title={"Weight"}
                 placeholder={"Weight"}
                 error={weight}
+                isTouched={props.touched.weight}
                 errorMessage={props.errors.weight}
                 values={props.values.weight}
                 handleChange={props.handleChange("weight")}
@@ -91,6 +93,7 @@ const CalculatorScreen = ({ navigation }: Props) => {
                 title={"Height"}
                 placeholder={"Height"}
                 error={height}
+                isTouched={props.touched.height}
                 errorMessage={props.errors.height}
                 values={props.values.height}
                 handleChange={props.handleChange("height")}
@@ -103,6 +106,7 @@ const CalculatorScreen = ({ navigation }: Props) => {
                 error={activity}
                 errorMessage={props.errors.activity}
                 values={props.values.activity}
+                isTouched={props.touched.activity}
                 handleChange={props.handleChange("activity")}
                 handleBlur={props.handleBlur("activity")}
               >

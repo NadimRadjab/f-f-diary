@@ -47,4 +47,5 @@ export type WeeklyParamList = {
 export type AuthParamList = {
   Login: undefined;
   Register: undefined;
+  LoadingScreen: undefined;
 };

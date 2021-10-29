@@ -11,6 +11,7 @@ import { useAppDipsatch, useAppSelector } from "../../redux/hooks";
 import { register } from "../../redux/features/Auth/authSlice";
 import CustomAlert from "../../components/Utils/CustomAlert";
 import Loading from "../../components/Utils/Loading";
+import { colors } from "../../styles/colors";
 
 const RegisterSchema = yup.object({
   email: yup
@@ -34,7 +35,12 @@ const RegisterScreen = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<AuthParamList, "Login">>();
   return (
-    <View flex="1" justifyContent="center" alignItems="center">
+    <View
+      bg="warmGray.100"
+      flex="1"
+      justifyContent="center"
+      alignItems="center"
+    >
       <Formik
         initialValues={{
           email: "",
@@ -144,7 +150,7 @@ const RegisterScreen = () => {
               {auth.isLoading ? (
                 <Loading />
               ) : (
-                <Button onPress={props.handleSubmit}>REGISTER</Button>
+                <Button onPress={props.handleSubmit}>Sign Up</Button>
               )}
             </View>
           </View>

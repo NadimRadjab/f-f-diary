@@ -59,7 +59,8 @@
     "styled-components": "^5.3.1",
     "styled-system": "^5.1.5",
     "uuidv4": "^6.2.12",
-    "yup": "^0.32.11"
+    "yup": "^0.32.11",
+    "expo-image-picker": "~10.2.2"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",

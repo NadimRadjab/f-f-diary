@@ -1,12 +1,11 @@
 import React from "react";
 import { Input, FormControl, WarningOutlineIcon } from "native-base";
 const CalculatorInput = (props: any) => {
-  console.log(props.isTouched);
   return (
     <FormControl
       alignItems="center"
       isRequired
-      isInvalid={props.error ? true : false}
+      isInvalid={props.error && props.isTouched ? true : false}
     >
       <FormControl.Label>{props.title}</FormControl.Label>
       <Input
@@ -19,7 +18,7 @@ const CalculatorInput = (props: any) => {
         contextMenuHidden={true}
         placeholder={props.placeholder}
       />
-      {props.error && (
+      {props.error && props.isTouched && (
         <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
           {props.errorMessage}
         </FormControl.ErrorMessage>

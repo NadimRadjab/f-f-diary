@@ -21,6 +21,8 @@ const InfoModal = (props: Props) => {
     text = "Email-Address";
   } else if (items.value === "PhoneNumber") {
     text = "Phone Number";
+  } else if (items.value === "DeleteAccount") {
+    text = "Account Deletion";
   } else {
     text = items.value;
   }

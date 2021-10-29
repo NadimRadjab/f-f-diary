@@ -13,7 +13,7 @@ const CalculatorSelect = (props: any) => {
       p="4"
       alignItems="center"
       isRequired
-      isInvalid={props.error ? true : false}
+      isInvalid={props.error && props.isTouched ? true : false}
     >
       <FormControl.Label>{props.title}</FormControl.Label>
       <Select
@@ -30,7 +30,7 @@ const CalculatorSelect = (props: any) => {
       >
         {props.children}
       </Select>
-      {props.error && (
+      {props.error && props.isTouched && (
         <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
           {props.errorMessage}
         </FormControl.ErrorMessage>

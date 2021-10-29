@@ -1,5 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { firestore } from "../../../firebase";
+import { createSlice } from "@reduxjs/toolkit";
 import { PersonalData, ProgressData } from "./types";
 import {
   toggleRecipeInFavorites,
@@ -7,16 +6,20 @@ import {
   togglePlanInFavorites,
   changeName,
   changeNumber,
+  getUserProfile,
+  setCurrentWeight,
   changePassoword,
+  changeEmailAddresss,
+  deleteUserAccount,
+  updateProfileImage,
 } from "./thunks";
 import { Recipe } from "../Recipes/type";
 import { WeeklyPlan } from "../WeeklyPlans/types";
-import { profileData } from "../../../seeds/profileData";
 interface ProfileState {
   isLoading: boolean;
   profileId: string | undefined;
   userId?: string | null;
-  date?: string;
+  date?: string | undefined | Date;
   favorites: {
     recipes: Recipe[];
     plans: { date: Date; id: string; plan: WeeklyPlan[] }[];
@@ -25,88 +28,6 @@ interface ProfileState {
   items?: { meals?: {}[]; recipes?: {}[] };
   progressData: ProgressData;
 }
-
-export const getUserProfile = createAsyncThunk(
-  "userProfile/getUserProfile",
-  async (userId: string | undefined | null) => {
-    let newProfile = {
-      ...profileData,
-      userId,
-    };
-
-    const usersIds = [] as any;
-    try {
-      const profile = await firestore.collection("profiles").get();
-      const data = profile.docs.forEach((doc) =>
-        usersIds.push(doc.data().userId)
-      );
-      if (usersIds.includes(userId)) {
-        profile.docs.forEach((doc) => {
-          if (doc.data().userId === userId) {
-            newProfile.profileId = doc.id;
-            newProfile.date = doc.data().date;
-            newProfile.userId = doc.data().userId;
-            newProfile.favorites = doc.data().favorites;
-            newProfile.personalData = doc.data().personalData;
-            newProfile.items = doc.data().items;
-            newProfile.progressData = doc.data().progressData;
-          }
-        });
-      } else {
-        const res = await firestore.collection("profiles").add({
-          ...newProfile,
-        });
-        await res.get().then((doc) => {
-          newProfile.profileId = doc.id;
-          newProfile.date = doc.data()?.date;
-          newProfile.userId = doc.data()?.userId;
-          newProfile.favorites = doc.data()?.favorites;
-          newProfile.personalData = doc.data()?.personalData;
-          newProfile.items = doc.data()?.items;
-          newProfile.progressData = doc.data()!.progressData;
-        });
-      }
-      return newProfile;
-    } catch (err) {
-      console.log(err);
-    }
-  }
-);
-export const setCurrentWeight = createAsyncThunk(
-  "userProfile/setCurrentWeight",
-  async (items: {
-    isCurrentWeight: boolean;
-    isStartingWeight: boolean;
-    date?: Date;
-    weight: string;
-    profileId: string | undefined;
-  }) => {
-    try {
-      const data = await firestore.collection("profiles").doc(items.profileId);
-      let newObj = {
-        weight: items.weight,
-        date: new Date(),
-      };
-      if (items.isCurrentWeight && !items.isStartingWeight) {
-        const info = await data.get();
-        let weightArr = [...info.data()!.progressData.currentWeight, newObj];
-        await data.update({ "progressData.currentWeight": weightArr });
-      } else if (items.isCurrentWeight && items.isStartingWeight) {
-        await data.update({
-          "progressData.startingWeight": {
-            weight: items.weight,
-            date: items.date,
-          },
-        });
-      } else {
-        await data.update({ "progressData.goalWeight": items.weight });
-      }
-      return { ...items, newObj };
-    } catch (err) {
-      console.log(err);
-    }
-  }
-);
 
 const initialState: ProfileState = {
   isLoading: false,
@@ -118,6 +39,7 @@ const initialState: ProfileState = {
     plans: [],
   },
   personalData: {
+    image: "",
     message: "",
     name: "",
     number: "",
@@ -232,6 +154,28 @@ const profileSlice = createSlice({
         state.isLoading = false;
 
         state.personalData.message = action.payload;
+      })
+      .addCase(changeEmailAddresss.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(changeEmailAddresss.fulfilled, (state, action: any) => {
+        state.isLoading = false;
+        state.personalData.email = action.payload.data;
+        state.personalData.message = action.payload.message;
+      })
+      .addCase(deleteUserAccount.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteUserAccount.fulfilled, (state, action: any) => {
+        state.isLoading = false;
+        state.personalData.message = action.payload;
+      })
+      .addCase(updateProfileImage.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateProfileImage.fulfilled, (state, action: any) => {
+        state.isLoading = false;
+        state.personalData.image = action.payload;
       });
   },
 });

@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { useFormik } from "formik";
-import { Button, Modal, FormControl, Input, View } from "native-base";
+import { Button, FormControl, Input, View } from "native-base";
 import { Text } from "react-native";
 import * as Yup from "yup";
 import { globalStyles } from "../../../styles/global";
@@ -16,6 +16,7 @@ type Props = {
 const InfoForm = (props: Props) => {
   const { items } = props;
   const FormSchema = Yup.object({
+    isDeletingAccount: Yup.boolean(),
     doValidation: Yup.boolean(),
     oldPassword: Yup.string().when("doValidation", {
       is: true,
@@ -27,13 +28,25 @@ const InfoForm = (props: Props) => {
         .email("Invalid email address")
         .required("Email is required"),
     }),
-    value: Yup.string().required(`${props.text} cannot be empty.`),
+    value: Yup.string()
+      .required(`${props.text} cannot be empty.`)
+      .when("isDeletingAccount", {
+        is: true,
+        then: Yup.string()
+          .required("Field cannot be empty.")
+          .matches(/\bConfirm\b/, "Please enter Confirm to continue."),
+      }),
   });
 
   const formik = useFormik({
     initialValues: {
+      isDeletingAccount: items.value === "DeleteAccount" ? true : false,
       doValidation:
-        items.value === "Password" || items.value === "Email" ? true : false,
+        items.value === "Password" ||
+        items.value === "Email" ||
+        items.value === "DeleteAccount"
+          ? true
+          : false,
       value: "",
       oldPassword: "",
       oldEmail: "",
@@ -46,8 +59,14 @@ const InfoForm = (props: Props) => {
   });
   return (
     <FormControl>
-      <FormControl.Label>Set {props.text}</FormControl.Label>
-      {(props.items.value === "Password" || props.items.value === "Email") && (
+      <FormControl.Label>
+        {items.value === "DeleteAccount"
+          ? `Enter your data to delete the account!`
+          : `Set ${props.text}`}
+      </FormControl.Label>
+      {(props.items.value === "Password" ||
+        props.items.value === "Email" ||
+        props.items.value === "DeleteAccount") && (
         <View>
           {formik.touched.oldEmail && formik.errors.oldEmail && (
             <Text style={globalStyles.errorText}>{formik.errors.oldEmail}</Text>
@@ -73,6 +92,7 @@ const InfoForm = (props: Props) => {
               p="2"
               onBlur={formik.handleBlur("oldPassword")}
               m="2"
+              type="password"
               contextMenuHidden={true}
               onChangeText={formik.handleChange("oldPassword")}
               value={formik.values.oldPassword}
@@ -85,28 +105,44 @@ const InfoForm = (props: Props) => {
         {formik.touched.value && formik.errors.value ? (
           <Text style={globalStyles.errorText}>{formik.errors.value}</Text>
         ) : null}
-        <Input
-          p="2"
-          m="2"
-          keyboardType={
-            props.items.value === "PhoneNumber" ? "phone-pad" : "default"
-          }
-          onBlur={formik.handleBlur("value")}
-          contextMenuHidden={true}
-          onChangeText={formik.handleChange("value")}
-          value={formik.values.value}
-          placeholder={
-            items.value === "Email"
-              ? "New Email Address"
-              : items.value === "Password"
-              ? "New Password"
-              : items.value === "PhoneNumber"
-              ? "Phone Number"
-              : items.value
-          }
-        />
+        {items.value === "DeleteAccount" ? (
+          <Input
+            p="2"
+            m="2"
+            keyboardType={
+              props.items.value === "PhoneNumber" ? "phone-pad" : "default"
+            }
+            onBlur={formik.handleBlur("value")}
+            contextMenuHidden={true}
+            onChangeText={formik.handleChange("value")}
+            value={formik.values.value}
+            placeholder="Confirm"
+          />
+        ) : (
+          <Input
+            p="2"
+            m="2"
+            keyboardType={
+              props.items.value === "PhoneNumber" ? "phone-pad" : "default"
+            }
+            onBlur={formik.handleBlur("value")}
+            contextMenuHidden={true}
+            onChangeText={formik.handleChange("value")}
+            type={items.value === "Password" ? "password" : "default"}
+            value={formik.values.value}
+            placeholder={
+              items.value === "Email"
+                ? "New Email Address"
+                : items.value === "Password"
+                ? "New Password"
+                : items.value === "PhoneNumber"
+                ? "Phone Number"
+                : items.value
+            }
+          />
+        )}
       </View>
-      <Button onPress={formik.submitForm}>Save</Button>
+      <Button onPress={formik.submitForm}>Confirm</Button>
     </FormControl>
   );
 };

@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { View, Text, ScrollView } from "native-base";
 import { Button, TouchableOpacity } from "react-native";
-import { globalStyles } from "../../styles/global";
-import SetWeightModal from "../../components/Profile/SetWeightModal";
-import { useAppDipsatch, useAppSelector } from "../../redux/hooks";
-import { setCurrentWeight } from "../../redux/features/Profile/profileSlice";
-import Loading from "../../components/Utils/Loading";
-import { colors } from "../../styles/colors";
+import { globalStyles } from "../../../styles/global";
+import SetWeightModal from "../../../components/Profile/SetWeightModal";
+import { useAppDipsatch, useAppSelector } from "../../../redux/hooks";
+import { setCurrentWeight } from "../../../redux/features/Profile/thunks";
+import Loading from "../../../components/Utils/Loading";
+import { colors } from "../../../styles/colors";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { GoalsParamList } from "../../routs/Profile/types";
-import Chart from "../../components/Profile/Goals/Chart";
+import { GoalsParamList } from "../../../routs/Profile/types";
+import Chart from "../../../components/Profile/Goals/Chart";
 type Props = NativeStackScreenProps<GoalsParamList, "Progress">;
 const GoalsScreen = ({ navigation }: Props) => {
   const [openModel, setOpenModel] = useState(false);

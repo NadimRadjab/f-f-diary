@@ -1,18 +1,25 @@
 import React from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { Text, View } from "native-base";
+import { logOut } from "../../../redux/features/Auth/authSlice";
+import { useAppDipsatch } from "../../../redux/hooks";
+
 type Props = {
   children: React.ReactNode;
-  onHandleInfo: (value: string) => void;
-  value: string;
-  info?: string;
+  onHandleInfo?: (value: string) => void;
+  value?: string;
+  info?: string | null;
 };
 const InfoList = (props: Props) => {
+  const dispatch = useAppDipsatch();
+  const handlePress = () => {
+    if (!props.onHandleInfo) {
+      dispatch(logOut());
+    } else props.onHandleInfo(props.value as any);
+  };
+
   return (
-    <TouchableOpacity
-      onPress={() => props.onHandleInfo(props.value)}
-      style={styles.list}
-    >
+    <TouchableOpacity onPress={handlePress} style={styles.list}>
       <View p="3">
         <Text m="1" fontSize="16">
           {props.children}
