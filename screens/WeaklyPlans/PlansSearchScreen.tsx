@@ -11,7 +11,7 @@ import filtersData from "../../seeds/filtersData";
 import { getPlan } from "../../redux/features/WeeklyPlans/weeklyPlansSlice";
 
 const PlansSearchScreen = () => {
-  const [filters, setFilters] = useState(filtersData);
+  const [filters, setFilters] = useState([...filtersData]);
   const [selected, setSelected] = useState<any>([]);
 
   const plan = useAppSelector((state) => state.plans.plans);
@@ -21,11 +21,11 @@ const PlansSearchScreen = () => {
   const handleFilters = (id: string): void => {
     const newArr = filters.map((item) => {
       if (item.id === id) {
-        item.isSelected = !item.isSelected;
+        return { ...item, isSelected: !item.isSelected };
       }
-      return item;
+      return { ...item };
     });
-    const query = filters
+    const query = newArr
       .map((item) => {
         if (item.isSelected) return item.title;
       })
@@ -34,6 +34,7 @@ const PlansSearchScreen = () => {
     setFilters(newArr);
     setSelected(query);
   };
+
   const navigation =
     useNavigation<
       NativeStackNavigationProp<WeeklyParamList, "weaklyPlansSearch">
@@ -42,6 +43,8 @@ const PlansSearchScreen = () => {
   const handleQuery = (calories: string): void => {
     if (!calories) return;
     dispatch(getPlan({ selected, calories }));
+    setSelected([]);
+    setFilters(filtersData);
     navigation.navigate("weeklyplan");
   };
 

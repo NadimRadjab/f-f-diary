@@ -4,7 +4,6 @@ import { View } from "native-base";
 import CustomText from "../UI/CustomText";
 interface Props {
   handleFilters: (id: string) => void;
-
   color: string;
   title: string;
   id: string;

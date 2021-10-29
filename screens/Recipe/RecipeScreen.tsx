@@ -2,10 +2,11 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ScrollView, View } from "native-base";
 import React, { useState } from "react";
-import { Animated, Platform } from "react-native";
+import { Animated } from "react-native";
 import Filters from "../../components/Recipe/Filters";
 import RecipeCard from "../../components/Recipe/RecipeCard";
 import CustomSearch from "../../components/UI/CustomSearch";
+import CustomText from "../../components/UI/CustomText";
 import Loading from "../../components/Utils/Loading";
 import { getRecipes } from "../../redux/features/Recipes/recipeSlice";
 import { Recipe } from "../../redux/features/Recipes/type";
@@ -14,7 +15,7 @@ import { RecipieParamList } from "../../routs/NavigationTypes";
 import filtersData from "../../seeds/filtersData";
 
 const RecipeScreen = () => {
-  const [filters, setFilters] = useState(filtersData);
+  const [filters, setFilters] = useState([...filtersData]);
   const [selected, setSelected] = useState<any>([]);
   const recipes = useAppSelector((state) => state.recipes.recipes);
   const isLoading = useAppSelector((state) => state.recipes.isLoading);
@@ -23,11 +24,12 @@ const RecipeScreen = () => {
   const handleFilters = (id: string): void => {
     const newArr = filters.map((item) => {
       if (item.id === id) {
-        item.isSelected = !item.isSelected;
+        return { ...item, isSelected: !item.isSelected };
       }
-      return item;
+      return { ...item };
     });
-    const query = filters
+
+    const query = newArr
       .map((item) => {
         if (item.isSelected) return item.title;
       })
@@ -36,9 +38,14 @@ const RecipeScreen = () => {
     setFilters(newArr);
     setSelected(query);
   };
+
   const handleQuery = (recipe: string) => {
+    if (!recipe) return;
     dispatch(getRecipes({ selected, recipe }));
+    setFilters(filtersData);
+    setSelected([]);
   };
+
   const navigation =
     useNavigation<NativeStackNavigationProp<RecipieParamList, "RecipeStack">>();
   const handleLocation = (recipe: Recipe) => {
@@ -95,7 +102,11 @@ const RecipeScreen = () => {
           })}
         </ScrollView>
       </Animated.View>
-      {isLoading ? (
+      {!recipes.length && !isLoading ? (
+        <View justifyContent="center" alignItems="center" flex="1">
+          <CustomText>Search for recipes.</CustomText>
+        </View>
+      ) : isLoading ? (
         <Loading />
       ) : (
         <Animated.FlatList

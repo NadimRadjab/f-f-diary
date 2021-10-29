@@ -33,6 +33,7 @@ const CustomSearch: React.FC<Props> = (props) => {
         <Input
           onSubmitEditing={handleSubmit}
           value={search}
+          keyboardType={!props.isSearching ? "number-pad" : "default"}
           onChangeText={handleSerach}
           w="80%"
           InputLeftElement={

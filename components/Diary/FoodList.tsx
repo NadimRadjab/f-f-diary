@@ -1,11 +1,9 @@
-import { View, Text, Button, Box, IconButton } from "native-base";
-import React, { ReactComponentElement } from "react";
+import { View, Text } from "native-base";
+import React from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
-import { addNewFood, deleteFood } from "../../redux/features/Diary/diarySlice";
+import { addNewFood } from "../../redux/features/Diary/diarySlice";
 import { useAppDipsatch, useAppSelector } from "../../redux/hooks";
-import { Ionicons } from "@expo/vector-icons";
-import { IViewProps } from "native-base/lib/typescript/components/basic/View/types";
-
+import { v4 as uuidv4 } from "uuid";
 interface Props {
   food: any;
   mealId: string;
@@ -18,7 +16,7 @@ const FoodList = ({ mealId, food, isSearched }: Props) => {
   const handleMeal = () => {
     if (!isSearched) return;
     const newFood = {
-      id: food.id,
+      id: uuidv4(),
       title: food.title,
       servingsSize: food.servings.size,
       servingsNumber: food.servings.number,
@@ -36,10 +34,7 @@ const FoodList = ({ mealId, food, isSearched }: Props) => {
 
     dispatch(addNewFood(items));
   };
-  let cView: any = TouchableOpacity;
-  if (!isSearched) {
-    cView = <View></View>;
-  }
+
   return (
     <TouchableOpacity onPress={handleMeal} style={styles.screen}>
       <View bg="#fffffc" style={styles.listContainer}>
