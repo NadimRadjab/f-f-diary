@@ -2,6 +2,7 @@
   "expo": {
     "name": "F&F-Diary",
     "slug": "ff-diary",
+    "description":"F&F- Diary is a mobile fitness app made with React Native. The app is originally inspired by myfitnesspal.",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -17,9 +18,13 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "com.radjab.f&f-diary",
+      "buildNumber": "1.0.0",
       "supportsTablet": true
     },
     "android": {
+      "package": "com.radjab.f&f-diary",
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffff"
