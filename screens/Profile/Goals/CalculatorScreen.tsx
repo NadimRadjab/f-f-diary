@@ -1,13 +1,14 @@
 import React from "react";
 import { Formik } from "formik";
-import { View, Select, ScrollView } from "native-base";
+import { View, Select, ScrollView, Text } from "native-base";
 import * as Yup from "yup";
-import { Button } from "react-native";
+import { Button, Platform, TouchableOpacity } from "react-native";
 import { colors } from "../../../styles/colors";
 import CalculatorInput from "../../../components/Profile/Goals/Calculator/CalculatorInput";
 import CalculatorSelect from "../../../components/Profile/Goals/Calculator/CalculatorSelect";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { GoalsParamList } from "../../../routs/Profile/types";
+import { globalStyles } from "../../../styles/global";
 const CalculatorSchema = Yup.object({
   age: Yup.number().required("Age is required").min(1).max(100),
   weight: Yup.number().required("Weight is required").min(1).max(200),
@@ -126,13 +127,24 @@ const CalculatorScreen = ({ navigation }: Props) => {
                 <Select.Item label="Athlete (2x per day)" value="1.9" />
               </CalculatorSelect>
 
-              <View m="3">
-                <Button
+              {Platform.OS === "ios" ? (
+                <View m="2">
+                  <Button
+                    onPress={props.handleSubmit as (values: any) => void}
+                    title="Calculate"
+                    color={colors.primaryBlue}
+                  />
+                </View>
+              ) : (
+                <TouchableOpacity
                   onPress={props.handleSubmit as (values: any) => void}
-                  title="Calculate"
-                  color={colors.primaryBlue}
-                />
-              </View>
+                  style={globalStyles.btn}
+                >
+                  <Text fontSize="16" color="white">
+                    Calculate
+                  </Text>
+                </TouchableOpacity>
+              )}
             </ScrollView>
           );
         }}

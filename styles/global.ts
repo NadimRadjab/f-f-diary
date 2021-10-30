@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { colors } from "./colors";
 
 export const globalStyles = StyleSheet.create({
   errorText: {
@@ -39,5 +40,13 @@ export const globalStyles = StyleSheet.create({
     elevation: 7,
     borderRadius: 10,
     backgroundColor: "white",
+  },
+  btn: {
+    backgroundColor: colors.primaryBlue,
+    width: 150,
+    height: 45,
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

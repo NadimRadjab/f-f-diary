@@ -25,8 +25,9 @@ const MealsCard: React.FC<Props> = ({ meal }) => {
   return (
     <VStack
       borderRadius="2xl"
-      w="95%"
-      marginBottom="5"
+      w="100%"
+      marginBottom="10"
+      p="1"
       _light={{ backgroundColor: "light.50" }}
       space={3}
       alignItems="center"

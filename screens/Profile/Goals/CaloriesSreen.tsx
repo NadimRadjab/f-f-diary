@@ -1,13 +1,15 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { View, Text, Heading } from "native-base";
 import React, { useState } from "react";
-import { Button, StyleSheet, TouchableOpacity } from "react-native";
+import { Button, Platform, StyleSheet, TouchableOpacity } from "react-native";
 import ResultCard from "../../../components/Profile/Goals/Results/ResultCard";
 import CustomText from "../../../components/UI/CustomText";
 import { useAppDipsatch, useAppSelector } from "../../../redux/hooks";
 import { setCurrentCalories } from "../../../redux/features/Profile/thunks";
 import { GoalsParamList } from "../../../routs/Profile/types";
 import { colors } from "../../../styles/colors";
+import { globalStyles } from "../../../styles/global";
+import { padding } from "styled-system";
 type Props = NativeStackScreenProps<GoalsParamList, "Calories">;
 
 const CaloriesSreen = ({ navigation, route }: Props) => {
@@ -105,9 +107,25 @@ const CaloriesSreen = ({ navigation, route }: Props) => {
           <CustomText>calories per day</CustomText>
         </ResultCard>
       </View>
-      <View p="2" w="35%" m="2">
-        <Button onPress={handleSubmit} color={colors.primaryBlue} title="Set" />
-      </View>
+
+      {Platform.OS === "ios" ? (
+        <View p="2" w="35%" m="2">
+          <Button
+            onPress={handleSubmit}
+            title="Set"
+            color={colors.primaryBlue}
+          />
+        </View>
+      ) : (
+        <TouchableOpacity
+          onPress={handleSubmit}
+          style={[{ padding: 3, margin: 10 }, globalStyles.btn]}
+        >
+          <Text fontSize="16" color="white">
+            Set
+          </Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };

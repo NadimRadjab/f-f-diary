@@ -95,27 +95,27 @@ export const addNewFood = createAsyncThunk(
   "food/addNewFood",
   async (items: { diaryId: string; mealId?: string; newFood: any }) => {
     let newArr = [] as any;
+    let newObj: any = {
+      badges: items.newFood.badges,
+      id: items.newFood.id,
+      title: items.newFood.title,
+      description: !items.newFood.description ? "" : items.newFood.description,
+      images: items.newFood.images,
+      calories: items.newFood.calories,
+      servingsSize: !items.newFood.servingsSize
+        ? ""
+        : items.newFood.servingsSize,
+      nutrition: items.newFood.nutrition,
+    };
 
-    const data = await firestore.collection("diaries").get();
-    data.forEach((doc) => {
-      const newObj: any = {
-        badges: items.newFood.badges,
-        id: items.newFood.id,
-        title: items.newFood.title,
-        description: !items.newFood.description && "",
-        images: items.newFood.images,
-        calories: items.newFood.calories,
-        servingsSize: !items.newFood.servingsSize && "",
-        nutrition: items.newFood.nutrition,
-      };
+    const data = await firestore.collection("diaries").doc(items.diaryId).get();
 
-      newArr = doc.data().meals.map((meal: Meal) => {
-        if (meal.id === items.mealId) {
-          meal.foods.push(newObj);
-          return meal;
-        }
+    newArr = data.data()!.meals.map((meal: Meal) => {
+      if (meal.id === items.mealId) {
+        meal.foods.push(newObj);
         return meal;
-      });
+      }
+      return meal;
     });
 
     await firestore
@@ -144,17 +144,16 @@ export const deleteFood = createAsyncThunk(
     foodId: string;
   }) => {
     let newArr = [] as any;
-    const data = await firestore.collection("diaries").get();
-    data.forEach((doc) => {
-      newArr = doc.data().meals.map((meal: Meal) => {
-        if (meal.id === items.mealId) {
-          meal.foods = meal.foods.filter(
-            (food: Food) => food.id !== items.foodId
-          );
-          return meal;
-        }
+    const data = await firestore.collection("diaries").doc(items.diaryId).get();
+
+    newArr = data.data()!.meals.map((meal: Meal) => {
+      if (meal.id === items.mealId) {
+        meal.foods = meal.foods.filter(
+          (food: Food) => food.id !== items.foodId
+        );
         return meal;
-      });
+      }
+      return meal;
     });
 
     await firestore

@@ -9,8 +9,9 @@ interface Props {
   mealId: string;
   isSearched: boolean;
   pageId: string | null;
+  handleSnackBar: (title: string) => void;
 }
-const FoodList = ({ mealId, food, isSearched }: Props) => {
+const FoodList = ({ mealId, food, isSearched, handleSnackBar }: Props) => {
   const diaryId = useAppSelector((state) => state.diary.id);
   const dispatch = useAppDipsatch();
   const handleMeal = () => {
@@ -33,6 +34,7 @@ const FoodList = ({ mealId, food, isSearched }: Props) => {
     };
 
     dispatch(addNewFood(items));
+    handleSnackBar(food.title);
   };
 
   return (

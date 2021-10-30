@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, ScrollView } from "native-base";
-import { Button, TouchableOpacity } from "react-native";
+import { Button, Platform, TouchableOpacity } from "react-native";
 import { globalStyles } from "../../../styles/global";
 import SetWeightModal from "../../../components/Profile/SetWeightModal";
 import { useAppDipsatch, useAppSelector } from "../../../redux/hooks";
@@ -91,11 +91,22 @@ const GoalsScreen = ({ navigation }: Props) => {
           </Text>
         </TouchableOpacity>
         <View w="50%" m="3" alignItems="center" justifyContent="center">
-          <Button
-            onPress={() => navigation.navigate("Calculator")}
-            title="Calculate Calories"
-            color={colors.primaryBlue}
-          />
+          {Platform.OS === "ios" ? (
+            <Button
+              onPress={() => navigation.navigate("Calculator")}
+              title="Calculate Calories"
+              color={colors.primaryBlue}
+            />
+          ) : (
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Calculator")}
+              style={globalStyles.btn}
+            >
+              <Text fontSize="16" color="white">
+                Calculate Calories
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
         <View
           flexDirection="row"

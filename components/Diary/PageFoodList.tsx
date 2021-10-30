@@ -23,18 +23,21 @@ const PageFoodList = ({ pageId, mealId, food, isSearched }: Props) => {
     <View w="100%">
       <View bg="#fffffc" shadow={3} style={styles.listContainer}>
         <View p="3">
-          <View justifyContent="space-around">
-            <Text fontSize="18">{food.title}</Text>
+          <View alignItems="center" justifyContent="center">
+            <Text fontSize="17">{food.title}</Text>
           </View>
 
           <View
-            mt="3"
-            borderTopWidth="0.3"
+            mt="2"
+            borderTopWidth="0.5"
+            borderTopColor="warmGray.300"
             flexDirection="row"
             justifyContent="space-between"
           >
             <View mt="3">
-              <Text>Searvings Size: {food.servingsSize}</Text>
+              <Text>
+                {food.servingsSize && `Searving Size: ${food.servingsSize}`}
+              </Text>
             </View>
             <View mt="3">
               <Text>
@@ -42,11 +45,13 @@ const PageFoodList = ({ pageId, mealId, food, isSearched }: Props) => {
               </Text>
             </View>
           </View>
-          <View alignItems="flex-end">
-            <TouchableOpacity onPress={handleDeleteMeal}>
-              <Text color="red.700">Remove</Text>
-            </TouchableOpacity>
-          </View>
+        </View>
+        <View alignItems="flex-end">
+          <TouchableOpacity onPress={handleDeleteMeal}>
+            <Text p="1" color="red.700">
+              Remove
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -54,7 +59,7 @@ const PageFoodList = ({ pageId, mealId, food, isSearched }: Props) => {
 };
 const styles = StyleSheet.create({
   listContainer: {
-    padding: 4,
+    padding: 3,
     width: "100%",
   },
 });
